@@ -3,8 +3,32 @@
   "WorkspaceRootPath": "C:\\Users\\User\\source\\repos\\VP_QM_winform\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{55543E82-A843-4519-87FB-2EA9E4ABB4FD}|VP_QM_winform.csproj|c:\\users\\user\\source\\repos\\vp_qm_winform\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{55543E82-A843-4519-87FB-2EA9E4ABB4FD}|VP_QM_winform.csproj|solutionrelative:form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{55543E82-A843-4519-87FB-2EA9E4ABB4FD}|VP_QM_winform.csproj|c:\\users\\user\\source\\repos\\vp_qm_winform\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
       "RelativeMoniker": "D:0:0:{55543E82-A843-4519-87FB-2EA9E4ABB4FD}|VP_QM_winform.csproj|solutionrelative:form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{55543E82-A843-4519-87FB-2EA9E4ABB4FD}|VP_QM_winform.csproj|c:\\users\\user\\source\\repos\\vp_qm_winform\\commanager\\mqttmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{55543E82-A843-4519-87FB-2EA9E4ABB4FD}|VP_QM_winform.csproj|solutionrelative:commanager\\mqttmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{55543E82-A843-4519-87FB-2EA9E4ABB4FD}|VP_QM_winform.csproj|c:\\users\\user\\source\\repos\\vp_qm_winform\\service\\processservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{55543E82-A843-4519-87FB-2EA9E4ABB4FD}|VP_QM_winform.csproj|solutionrelative:service\\processservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{55543E82-A843-4519-87FB-2EA9E4ABB4FD}|VP_QM_winform.csproj|c:\\users\\user\\source\\repos\\vp_qm_winform\\controller\\visioncontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{55543E82-A843-4519-87FB-2EA9E4ABB4FD}|VP_QM_winform.csproj|solutionrelative:controller\\visioncontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{55543E82-A843-4519-87FB-2EA9E4ABB4FD}|VP_QM_winform.csproj|c:\\users\\user\\source\\repos\\vp_qm_winform\\controller\\cameracontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{55543E82-A843-4519-87FB-2EA9E4ABB4FD}|VP_QM_winform.csproj|solutionrelative:controller\\cameracontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{55543E82-A843-4519-87FB-2EA9E4ABB4FD}|VP_QM_winform.csproj|c:\\users\\user\\source\\repos\\vp_qm_winform\\controller\\arduinocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{55543E82-A843-4519-87FB-2EA9E4ABB4FD}|VP_QM_winform.csproj|solutionrelative:controller\\arduinocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -14,7 +38,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 231,
-          "SelectedChildIndex": 8,
+          "SelectedChildIndex": 10,
           "Children": [
             {
               "$type": "Bookmark",
@@ -50,7 +74,89 @@
             },
             {
               "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "MQTTManager.cs",
+              "DocumentMoniker": "C:\\Users\\User\\source\\repos\\VP_QM_winform\\ComManager\\MQTTManager.cs",
+              "RelativeDocumentMoniker": "ComManager\\MQTTManager.cs",
+              "ToolTip": "C:\\Users\\User\\source\\repos\\VP_QM_winform\\ComManager\\MQTTManager.cs",
+              "RelativeToolTip": "ComManager\\MQTTManager.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAABIAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-03T02:51:31.572Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{d78612c7-9962-4b83-95d9-268046dad23a}"
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 0,
+              "Title": "Form1.cs",
+              "DocumentMoniker": "C:\\Users\\User\\source\\repos\\VP_QM_winform\\Form1.cs",
+              "RelativeDocumentMoniker": "Form1.cs",
+              "ToolTip": "C:\\Users\\User\\source\\repos\\VP_QM_winform\\Form1.cs",
+              "RelativeToolTip": "Form1.cs",
+              "ViewState": "AgIAAAwAAAAAAAAAAAAuwCYAAABTAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-03T01:46:39.172Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "ProcessService.cs",
+              "DocumentMoniker": "C:\\Users\\User\\source\\repos\\VP_QM_winform\\Service\\ProcessService.cs",
+              "RelativeDocumentMoniker": "Service\\ProcessService.cs",
+              "ToolTip": "C:\\Users\\User\\source\\repos\\VP_QM_winform\\Service\\ProcessService.cs",
+              "RelativeToolTip": "Service\\ProcessService.cs",
+              "ViewState": "AgIAACoAAAAAAAAAAAAowDUAAAAVAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-03T01:42:41.585Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "VisionController.cs",
+              "DocumentMoniker": "C:\\Users\\User\\source\\repos\\VP_QM_winform\\Controller\\VisionController.cs",
+              "RelativeDocumentMoniker": "Controller\\VisionController.cs",
+              "ToolTip": "C:\\Users\\User\\source\\repos\\VP_QM_winform\\Controller\\VisionController.cs",
+              "RelativeToolTip": "Controller\\VisionController.cs",
+              "ViewState": "AgIAAJYAAAAAAAAAAAAYwKcAAAAeAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-03T01:40:32.726Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "CameraController.cs",
+              "DocumentMoniker": "C:\\Users\\User\\source\\repos\\VP_QM_winform\\Controller\\CameraController.cs",
+              "RelativeDocumentMoniker": "Controller\\CameraController.cs",
+              "ToolTip": "C:\\Users\\User\\source\\repos\\VP_QM_winform\\Controller\\CameraController.cs",
+              "RelativeToolTip": "Controller\\CameraController.cs",
+              "ViewState": "AgIAAAsAAAAAAAAAAADwvwkAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-03T01:33:14.125Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "ArduinoController.cs",
+              "DocumentMoniker": "C:\\Users\\User\\source\\repos\\VP_QM_winform\\Controller\\ArduinoController.cs",
+              "RelativeDocumentMoniker": "Controller\\ArduinoController.cs",
+              "ToolTip": "C:\\Users\\User\\source\\repos\\VP_QM_winform\\Controller\\ArduinoController.cs",
+              "RelativeToolTip": "Controller\\ArduinoController.cs",
+              "ViewState": "AgIAAFIAAAAAAAAAAAAUwF8AAAAQAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-03T01:31:18.185Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
               "Title": "Form1.cs [\uB514\uC790\uC778]",
               "DocumentMoniker": "C:\\Users\\User\\source\\repos\\VP_QM_winform\\Form1.cs",
               "RelativeDocumentMoniker": "Form1.cs",
@@ -59,10 +165,6 @@
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-01-03T01:11:31.507Z",
               "EditorCaption": " [\uB514\uC790\uC778]"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{d78612c7-9962-4b83-95d9-268046dad23a}"
             }
           ]
         }
