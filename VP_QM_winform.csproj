@@ -74,6 +74,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controller\ArduinoController.cs" />
+    <Compile Include="Controller\CameraController.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
