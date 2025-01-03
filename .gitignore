@@ -1,0 +1,19 @@
+# Build artifacts
+bin/
+obj/
+
+# User-specific files
+*.user
+*.suo
+*.userosscache
+*.userprefs
+
+# Visual Studio-specific
+.vs/
+.vscode/
+
+# Temporary files
+*.tmp
+*.log
+*.ide
+
