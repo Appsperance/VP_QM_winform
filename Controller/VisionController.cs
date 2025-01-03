@@ -162,15 +162,18 @@ namespace VP_QM_winform.Controller
                 allBoxes.Add((classId, confidence, x1, y1, x2, y2));
             }
 
+            if (bestBoxes.Count == 0)
+            {
+                // bestBoxes가 비어 있을 경우 isGood 설정
+                isGood = true;
+            }
+
             foreach (var kvp in bestBoxes)
             {
                 int classId = kvp.Key;
                 var (confidence, x1, y1, x2, y2) = kvp.Value;
                 string label = labels[classId];
-                if (label == "good")
-                {
-                    isGood = true; // "good" 클래스 감지
-                }
+                
 
                 Console.WriteLine($"Label: {label}, Confidence: {confidence:F4}, BBox: [{x1:F2}, {y1:F2}, {x2:F2}, {y2:F2}]");
 
