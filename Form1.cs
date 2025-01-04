@@ -21,8 +21,11 @@ namespace VP_QM_winform
             InitializeComponent();
             //멀티쓰레드 상태관리 
             ProcessState.Initialize();
-        }
 
+            //디자인 코드
+            this.BackColor = Color.FromArgb(65, 176, 158);
+        }
+/*
         private async void button1_Click(object sender, EventArgs e)
         {
             try
@@ -37,17 +40,11 @@ namespace VP_QM_winform
             }
         }
 
-        private void button2_Click(object sender, EventArgs e)
-        {
-            process.StopAsync();
-        }
+ */      
 
-        private async void button3_Click(object sender, EventArgs e)
+        private void tableLayoutPanel4_Paint(object sender, PaintEventArgs e)
         {
-            /*string brokerAddress = "43.203.159.137";
-            string username = "admin";
-            string password = "vapor";
-            await mqttManager.ConnectAsync(brokerAddress,1883 ,username, password);*/
+
         }
     }
 }
