@@ -1,11 +1,14 @@
 ﻿using OpenCvSharp;
+using OpenCvSharp.Features2D;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using VP_QM_winform.ComManager;
 using VP_QM_winform.Controller;
+using VP_QM_winform.DTO;
 
 namespace VP_QM_winform.Service
 {
@@ -14,15 +17,21 @@ namespace VP_QM_winform.Service
         private readonly ArduinoController _arduinoController;
         private readonly CameraController _cameraController;
         private readonly VisionController _visionController;
+        private readonly MQTTManager _MQTTManager;
 
         private CancellationTokenSource _cancellationTokenSource;
 
         private bool isGood { get; set; }
         public ProcessService()
         {
+            string brokerAddress = "43.203.159.137";
+            string username = "admin";
+            string password = "vapor";
+            int port = 1883;
             _arduinoController = new ArduinoController();
             _cameraController = new CameraController();
             _visionController = new VisionController();
+            _MQTTManager = new MQTTManager(brokerAddress, port, username, password);
         }
 
         public async Task RunAsync()
@@ -43,6 +52,14 @@ namespace VP_QM_winform.Service
             Console.WriteLine("시작");
 
             bool isGood = false; // 기본값은 false
+            MQTTDTO dto = new MQTTDTO
+            {
+                LineId = "Line001",
+                LotId = "Lot123",
+                Shift = "Day",
+                EmployeeNumber = "E12345"
+            };
+
             try
             {
                 while (true)
@@ -55,6 +72,15 @@ namespace VP_QM_winform.Service
                         _arduinoController.serialReceiveData = "";
                         _arduinoController.SendConveyorSpeed(200);
                         Console.WriteLine("물건 투입");
+                        dto.StageVal = "100";
+                        try
+                        {
+                            await _MQTTManager.PublishMessageAsync(dto);
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine($"MQTT 메시지 발행 중 오류 발생: {ex.Message}");
+                        }
                     }
                     else if (_arduinoController.serialReceiveData.Contains("PS_2=ON"))
                     {
@@ -66,18 +92,40 @@ namespace VP_QM_winform.Service
                         Console.WriteLine("비전 검사 시작");
 
                         Mat img = await _cameraController.CaptureAsync(); // 비동기로 캡처
-                        ImageProcessingResult result = await Task.Run(() => _visionController.ProcessImage(img), token); // 비동기로 처리
+                        //ProcessImage에서 비전처리된 img를 dto의 NGImg 프로퍼티에 set
+                        ImageProcessingResult result = await Task.Run(() => _visionController.ProcessImage(img,dto), token); // 비동기로 처리
 
                         isGood = result == ImageProcessingResult.Success;
                         Console.WriteLine($"판독 결과: {isGood}");
                         await Task.Delay(2000, token); // 이미지 처리 대기
 
+                        dto.StageVal = "010";
+                        try
+                        {
+                            await _MQTTManager.PublishMessageAsync(dto);
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine($"MQTT 메시지 발행 중 오류 발생: {ex.Message}");
+                        }
                         // img 초기화
                         img.Dispose();
                         _arduinoController.SendConveyorSpeed(200);
-                    }
+
+                        
+    }
                     else if (_arduinoController.serialReceiveData.Contains("PS_1=ON") && !isGood)
                     {
+                        dto.StageVal = "001";
+                        try
+                        {
+                            await _MQTTManager.PublishMessageAsync(dto);
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine($"MQTT 메시지 발행 중 오류 발생: {ex.Message}");
+                        }
+
                         _arduinoController.serialReceiveData = "";
                         _arduinoController.SendConveyorSpeed(0);
                         await Task.Delay(2000, token);
