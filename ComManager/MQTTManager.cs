@@ -50,14 +50,10 @@ namespace VP_QM_winform.ComManager
                     .Build();
 
                 await _mqttClient.ConnectAsync(options);
-                // 연결 상태 업데이트
-                ProcessState.State["MQTTConnected"] = true; 
                 Console.WriteLine("MQTT 브로커 연결 성공");
             }
             catch (Exception ex)
             {
-                // 연결 상태 업데이트
-                ProcessState.State["MQTTConnected"] = false;
                 Console.WriteLine($"MQTT 브로커 연결 실패: {ex.Message}");
                 throw;
             }
@@ -83,14 +79,10 @@ namespace VP_QM_winform.ComManager
                     .Build();
 
                 await _mqttClient.PublishAsync(mqttMessage);
-                // 마지막 메시지 상태 저장
-                ProcessState.State["LastMQTTMessage"] = mqttMessage;
                 Console.WriteLine($"Message sent to topic '{topic}': {message}");
             }
             catch (Exception ex)
             {
-                // 마지막 메시지 상태 저장
-                ProcessState.State["LastMQTTMessage"] = null;
                 Console.WriteLine($"MQTT 메시지 발행 실패: {ex.Message}");
                 throw;
             }
