@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using VP_QM_winform.Service;
 
 namespace VP_QM_winform.Controller
 {
@@ -22,19 +23,16 @@ namespace VP_QM_winform.Controller
         // 카메라 연결 메서드
         public void Connect(int cameraIndex = 1)
         {
-            if (videoCapture != null && videoCapture.IsOpened())
-            {
-                Console.WriteLine("카메라가 이미 연결되어 있습니다.");
-                return;
-            }
-
             videoCapture = new VideoCapture(cameraIndex);
-            if (!videoCapture.IsOpened())
+            if (videoCapture.IsOpened())
             {
+                ProcessState.State["CameraConnected"] = true;
+            }
+            else
+            {
+                ProcessState.State["CameraConnected"] = false;
                 throw new InvalidOperationException("카메라 연결에 실패했습니다.");
             }
-
-            Console.WriteLine("카메라 연결 성공");
         }
 
         // 이미지 캡처 메서드

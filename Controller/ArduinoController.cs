@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO.Ports;
 using System.Linq;
 using System.Management;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using VP_QM_winform.Service;
 
 namespace VP_QM_winform.Controller
 {
@@ -35,18 +37,50 @@ namespace VP_QM_winform.Controller
 
                         serialPort = new SerialPort(port.PortName, 9600);
                         serialPort.Open();
+                        //상태 업데이트
+                        ProcessState.State["ArduinoConnected"] = true;
+
                         Console.WriteLine($"Arduino Uno가 포트 {port.PortName}에 연결되었습니다.");
                         return true; // 연결 성공
                     }
                 }
                 catch (Exception ex)
                 {
+                    //상태 업데이트
+                    ProcessState.State["ArduinoConnected"] = false;
                     Console.WriteLine($"포트 {port.PortName} 스캔 중 오류: {ex.Message}");
                 }
             }
 
             Console.WriteLine("Arduino Uno를 찾을 수 없습니다.");
             return false; // Arduino Uno를 찾지 못함
+        }
+
+        private (string PortName, string Description)[] GetSerialPortDescriptions()
+        {
+            var portDescriptions = new List<(string PortName, string Description)>();
+            var searcher = new ManagementObjectSearcher("SELECT * FROM Win32_PnPEntity WHERE Name LIKE '%(COM%'");
+
+            foreach (var obj in searcher.Get())
+            {
+                string name = obj["Name"]?.ToString();
+                string portName = name?.Split('(')[1].Trim(')');
+                string description = obj["Description"]?.ToString() ?? "Unknown Device";
+
+                portDescriptions.Add((portName, description));
+            }
+
+            return portDescriptions.ToArray();
+        }
+
+        public void CloseConnection()
+        {
+            if (serialPort != null && serialPort.IsOpen)
+            {
+                serialPort.Close();
+                ProcessState.State["ArduinoConnected"] = false;
+                Console.WriteLine("시리얼 포트 닫힘");
+            }
         }
 
         // 아두이노 데이터 읽기 쓰레드
@@ -184,31 +218,7 @@ namespace VP_QM_winform.Controller
 
         }
 
-        private (string PortName, string Description)[] GetSerialPortDescriptions()
-        {
-            var portDescriptions = new List<(string PortName, string Description)>();
-            var searcher = new ManagementObjectSearcher("SELECT * FROM Win32_PnPEntity WHERE Name LIKE '%(COM%'");
-
-            foreach (var obj in searcher.Get())
-            {
-                string name = obj["Name"]?.ToString();
-                string portName = name?.Split('(')[1].Trim(')');
-                string description = obj["Description"]?.ToString() ?? "Unknown Device";
-
-                portDescriptions.Add((portName, description));
-            }
-
-            return portDescriptions.ToArray();
-        }
-
-        public void CloseConnection()
-        {
-            if (serialPort != null && serialPort.IsOpen)
-            {
-                serialPort.Close();
-                Console.WriteLine("시리얼 포트 닫힘");
-            }
-        }
+        
 
     }
 }

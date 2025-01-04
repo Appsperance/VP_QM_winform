@@ -19,6 +19,8 @@ namespace VP_QM_winform
         public Form1()
         {
             InitializeComponent();
+            //멀티쓰레드 상태관리 
+            ProcessState.Initialize();
         }
 
         private async void button1_Click(object sender, EventArgs e)

@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using VP_QM_winform.DTO;
+using VP_QM_winform.Service;
 
 namespace VP_QM_winform.Controller
 {
@@ -29,6 +30,7 @@ namespace VP_QM_winform.Controller
         public VisionController()
         {
             session = new InferenceSession(s_ONNX_MODEL_PATH);
+            ProcessState.State["VisionModelLoaded"] = true;
             Console.WriteLine("ONNX 모델 로드 완료");
         }
 
@@ -222,6 +224,8 @@ namespace VP_QM_winform.Controller
         public void Dispose()
         {
             session.Dispose();
+            ProcessState.State["VisionModelLoaded"] = false;
+            Console.WriteLine("ONNX 모델 자원 해제");
         }
 
     }
