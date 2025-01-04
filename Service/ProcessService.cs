@@ -22,6 +22,14 @@ namespace VP_QM_winform.Service
         private CancellationTokenSource _cancellationTokenSource;
 
         private bool isGood { get; set; }
+
+        MQTTDTO dto = new MQTTDTO
+        {
+            LineId = "Line001",
+            LotId = "Lot123",
+            Shift = "Day",
+            EmployeeNumber = "E12345"
+        };
         public ProcessService()
         {
             string brokerAddress = "43.203.159.137";
@@ -42,26 +50,54 @@ namespace VP_QM_winform.Service
             _cancellationTokenSource = new CancellationTokenSource();
             CancellationToken token = _cancellationTokenSource.Token;
 
-            await _arduinoController.ConnectToArduinoUnoAsync();
-            _arduinoController.StartSerialReadThread();
-
-            // 아두이노 포지션 초기화
-            _arduinoController.ResetPosition();
-
-            await Task.Delay(2000); // 초기화 대기
-            Console.WriteLine("시작");
-
-            bool isGood = false; // 기본값은 false
-            MQTTDTO dto = new MQTTDTO
-            {
-                LineId = "Line001",
-                LotId = "Lot123",
-                Shift = "Day",
-                EmployeeNumber = "E12345"
-            };
+            // 상태 초기화
+            ProcessState.UpdateState("CurrentStage", "Initializing");
+            ProcessState.UpdateState("ArduinoConnected", false);
+            ProcessState.UpdateState("CameraConnected", false);
+            ProcessState.UpdateState("MQTTConnected", false);        
 
             try
             {
+                // Arduino 연결
+                if (await _arduinoController.ConnectToArduinoUnoAsync() && _arduinoController.IsConnected)
+                {
+                    ProcessState.UpdateState("ArduinoConnected", true);
+                    _arduinoController.StartSerialReadThread();
+                }
+                else
+                {
+                    throw new InvalidOperationException("Arduino 연결 실패");
+                }
+
+                // 초기화 대기
+                _arduinoController.ResetPosition();
+                await Task.Delay(2000, token);
+
+                // Camera 연결 확인
+                _cameraController.Connect();
+                if (_cameraController.IsConnected)
+                {
+                    ProcessState.UpdateState("CameraConnected", true);
+                }
+                else
+                {
+                    throw new InvalidOperationException("카메라 연결 실패");
+                }
+
+                // MQTT 연결 상태 확인
+                if (_MQTTManager.IsConnected)
+                {
+                    ProcessState.UpdateState("MQTTConnected", true);
+                }
+                else
+                {
+                    throw new InvalidOperationException("MQTT 연결 실패");
+                }
+
+                // 상태 전환: 대기 상태로 전환
+                ProcessState.UpdateState("CurrentStage", "Idle");
+                Console.WriteLine("시스템 초기화 완료, 대기 상태로 전환");
+
                 while (true)
                 {
                     // 작업이 취소되었는지 확인
@@ -69,9 +105,11 @@ namespace VP_QM_winform.Service
 
                     if (_arduinoController.serialReceiveData.Contains("PS_3=ON"))
                     {
+                        ProcessState.UpdateState("CurrentStage", "sensor1");
                         _arduinoController.serialReceiveData = "";
                         _arduinoController.SendConveyorSpeed(200);
                         Console.WriteLine("물건 투입");
+                        //MQTT 전송
                         dto.StageVal = "100";
                         try
                         {
@@ -81,24 +119,30 @@ namespace VP_QM_winform.Service
                         {
                             Console.WriteLine($"MQTT 메시지 발행 중 오류 발생: {ex.Message}");
                         }
+
+                        // 상태 전환: 벨트 이동
+                        ProcessState.UpdateState("CurrentStage", "move");
                     }
-                    else if (_arduinoController.serialReceiveData.Contains("PS_2=ON"))
+                    //비전검사 이벤트
+                    if (_arduinoController.serialReceiveData.Contains("PS_2=ON"))
                     {
+                        ProcessState.UpdateState("CurrentStage", "sensor2");
                         _arduinoController.serialReceiveData = "";
                         await Task.Delay(1000, token); // 작업 취소 가능 대기
                         _arduinoController.SendConveyorSpeed(0);
                         await Task.Delay(2000, token);
 
                         Console.WriteLine("비전 검사 시작");
-
                         Mat img = await _cameraController.CaptureAsync(); // 비동기로 캡처
                         //ProcessImage에서 비전처리된 img를 dto의 NGImg 프로퍼티에 set
-                        ImageProcessingResult result = await Task.Run(() => _visionController.ProcessImage(img,dto), token); // 비동기로 처리
+                        await Task.Run(() => _visionController.ProcessImage(img,dto), token); // 비동기로 처리
 
-                        isGood = result == ImageProcessingResult.Success;
-                        Console.WriteLine($"판독 결과: {isGood}");
+                        var inspectionResult = ProcessState.GetState("InspectionResult");
+                        Console.WriteLine($"판독 결과: {inspectionResult}");
                         await Task.Delay(2000, token); // 이미지 처리 대기
 
+
+                        //MQTT 전송
                         dto.StageVal = "010";
                         try
                         {
@@ -113,9 +157,16 @@ namespace VP_QM_winform.Service
                         _arduinoController.SendConveyorSpeed(200);
 
                         
-    }
-                    else if (_arduinoController.serialReceiveData.Contains("PS_1=ON") && !isGood)
+                    }
+                    //로봇팔 이벤트
+                    if (_arduinoController.serialReceiveData.Contains("PS_1=ON") &&
+                        (bool)ProcessState.GetState("InspectionResult")==false)
                     {
+                        ProcessState.UpdateState("CurrentStage", "DefectiveHandling");
+                        _arduinoController.serialReceiveData = "";
+                        _arduinoController.SendConveyorSpeed(0);
+                        await Task.Delay(2000, token);
+
                         dto.StageVal = "001";
                         try
                         {
@@ -126,9 +177,6 @@ namespace VP_QM_winform.Service
                             Console.WriteLine($"MQTT 메시지 발행 중 오류 발생: {ex.Message}");
                         }
 
-                        _arduinoController.serialReceiveData = "";
-                        _arduinoController.SendConveyorSpeed(0);
-                        await Task.Delay(2000, token);
 
                         await Task.Run(() => _arduinoController.GrabObj(), token);
                         await Task.Delay(2000, token);
@@ -143,6 +191,9 @@ namespace VP_QM_winform.Service
                         await Task.Delay(2000, token);
 
                         _arduinoController.ResetPosition();
+                        // 상태 전환: Idle
+                        ProcessState.UpdateState("CurrentStage", "Idle");
+                        Console.WriteLine("불량품 처리 완료, 대기 상태로 전환");
                     }
                 }
             }
@@ -152,8 +203,18 @@ namespace VP_QM_winform.Service
             }
             finally
             {
+                // 자원 정리 및 상태 초기화
                 _arduinoController.ResetPosition();
                 _arduinoController.CloseConnection();
+                ProcessState.UpdateState("ArduinoConnected", false);
+
+                _cameraController.Dispose();
+                ProcessState.UpdateState("CameraConnected", false);
+
+                await _MQTTManager.DisconnectAsync();
+                ProcessState.UpdateState("MQTTConnected", false);
+
+                ProcessState.UpdateState("CurrentStage", "Idle");
             }
         }
 

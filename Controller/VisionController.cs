@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using VP_QM_winform.DTO;
+using VP_QM_winform.Service;
 
 namespace VP_QM_winform.Controller
 {
@@ -29,6 +30,7 @@ namespace VP_QM_winform.Controller
         public VisionController()
         {
             session = new InferenceSession(s_ONNX_MODEL_PATH);
+            ProcessState.State["VisionModelLoaded"] = true;
             Console.WriteLine("ONNX 모델 로드 완료");
         }
 
@@ -67,7 +69,7 @@ namespace VP_QM_winform.Controller
             return imageArray;
         }
 
-        public ImageProcessingResult ProcessImage(Mat img, MQTTDTO mqttDTO)
+        public void ProcessImage(Mat img, MQTTDTO mqttDTO)
         {
             // 1. 입력 데이터 준비
             float[] inputData = PreprocessImage(img);
@@ -76,7 +78,6 @@ namespace VP_QM_winform.Controller
             if (inputData == null)
             {
                 Console.WriteLine("이미지 전처리 중 문제가 발생했습니다.");
-                return ImageProcessingResult.PreprocessingError;
             }
 
             // 2. OrtValue 생성
@@ -101,24 +102,22 @@ namespace VP_QM_winform.Controller
                         var outputShape = output_0.GetTensorTypeAndShape().Shape;
                         Console.WriteLine($"output_0 Shape: [{string.Join(", ", outputShape)}]");
 
-                        // 4. 출력 데이터 후처리 및 결과 반환
-                        return ProcessOutput(outputData, outputShape, img, mqttDTO);
+                        //이미지 후처리
+                        ProcessOutput(outputData, outputShape, img, mqttDTO);
                     }
                     catch (Exception ex)
                     {
                         Console.WriteLine($"모델 실행 중 오류 발생: {ex.Message}");
-                        return ImageProcessingResult.ModelError;
                     }
                 }
             }
         }
 
-        private ImageProcessingResult ProcessOutput(ReadOnlySpan<float> outputData, IReadOnlyList<long> outputShape, Mat img, MQTTDTO mqttDTO)
+        private void ProcessOutput(ReadOnlySpan<float> outputData, IReadOnlyList<long> outputShape, Mat img, MQTTDTO mqttDTO)
         {
             if (img.Empty())
             {
                 Console.WriteLine("ProcessOutput : 입력받은 이미지가 없습니다.");
-                return ImageProcessingResult.NoImg;
             }
 
             string[] labels = { "crack", "dirty", "good", "hole", "scratch" };
@@ -165,8 +164,8 @@ namespace VP_QM_winform.Controller
 
             if (bestBoxes.Count == 0)
             {
-                // bestBoxes가 비어 있을 경우 isGood 설정
-                isGood = true;
+                // bestBoxes가 비어 있을 경우 양품으로 판정
+                ProcessState.State["InspectionResult"] = true;
             }
 
             foreach (var kvp in bestBoxes)
@@ -185,7 +184,11 @@ namespace VP_QM_winform.Controller
                 Cv2.Rectangle(img, topLeft, bottomRight, color, 2);
                 string displayText = $"{label}: {confidence:F2}";
                 Cv2.PutText(img, displayText, new Point((int)x1, (int)y1 - 10), HersheyFonts.HersheySimplex, 0.5, color, 1);
+                //상태 업데이트
+                ProcessState.UpdateState("InspectionResult",false);
             }
+
+            //지정 디렉토리에 결과 값 저장
             string outputDir = @"C:\VP_Vision\processed";
             Directory.CreateDirectory(outputDir);
 
@@ -200,8 +203,6 @@ namespace VP_QM_winform.Controller
                 memoryStream.Write(imageBytes, 0, imageBytes.Length);
                 mqttDTO.NGImg = memoryStream.ToArray(); // DTO에 이미지 바이트 배열 저장
             }
-
-            return isGood ? ImageProcessingResult.Success : ImageProcessingResult.Failure;
         }
 
         private int ArgMax(ReadOnlySpan<float> data)
@@ -222,6 +223,8 @@ namespace VP_QM_winform.Controller
         public void Dispose()
         {
             session.Dispose();
+            ProcessState.State["VisionModelLoaded"] = false;
+            Console.WriteLine("ONNX 모델 자원 해제");
         }
 
     }

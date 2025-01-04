@@ -19,11 +19,22 @@ namespace VP_QM_winform
         public Form1()
         {
             InitializeComponent();
+            //멀티쓰레드 상태관리 
+            ProcessState.Initialize();
         }
 
         private async void button1_Click(object sender, EventArgs e)
         {
-            await process.RunAsync();
+            try
+            {
+                // 백그라운드 작업 시작
+                await Task.Run(() => process.RunAsync());
+            }
+            catch (Exception ex)
+            {
+                // 예외 처리 (필요에 따라 메시지 박스 또는 로그 추가)
+                MessageBox.Show($"오류 발생: {ex.Message}");
+            }
         }
 
         private void button2_Click(object sender, EventArgs e)
