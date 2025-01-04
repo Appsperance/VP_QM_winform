@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using VP_QM_winform.Service;
 using VP_QM_winform.ComManager;
+using System.Drawing.Drawing2D;
 
 namespace VP_QM_winform
 {
@@ -19,11 +20,9 @@ namespace VP_QM_winform
         public Form1()
         {
             InitializeComponent();
+            
             //멀티쓰레드 상태관리 
             ProcessState.Initialize();
-
-            //디자인 코드
-            this.BackColor = Color.FromArgb(65, 176, 158);
         }
 /*
         private async void button1_Click(object sender, EventArgs e)
@@ -43,6 +42,16 @@ namespace VP_QM_winform
  */      
 
         private void tableLayoutPanel4_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void tableLayoutPanel2_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void label1_Click(object sender, EventArgs e)
         {
 
         }
