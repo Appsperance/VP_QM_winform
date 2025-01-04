@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VP_QM_winform.DTO;
 
 namespace VP_QM_winform.Controller
 {
@@ -66,7 +67,7 @@ namespace VP_QM_winform.Controller
             return imageArray;
         }
 
-        public ImageProcessingResult ProcessImage(Mat img)
+        public ImageProcessingResult ProcessImage(Mat img, MQTTDTO mqttDTO)
         {
             // 1. 입력 데이터 준비
             float[] inputData = PreprocessImage(img);
@@ -101,7 +102,7 @@ namespace VP_QM_winform.Controller
                         Console.WriteLine($"output_0 Shape: [{string.Join(", ", outputShape)}]");
 
                         // 4. 출력 데이터 후처리 및 결과 반환
-                        return ProcessOutput(outputData, outputShape, img);
+                        return ProcessOutput(outputData, outputShape, img, mqttDTO);
                     }
                     catch (Exception ex)
                     {
@@ -112,7 +113,7 @@ namespace VP_QM_winform.Controller
             }
         }
 
-        private ImageProcessingResult ProcessOutput(ReadOnlySpan<float> outputData, IReadOnlyList<long> outputShape, Mat img)
+        private ImageProcessingResult ProcessOutput(ReadOnlySpan<float> outputData, IReadOnlyList<long> outputShape, Mat img, MQTTDTO mqttDTO)
         {
             if (img.Empty())
             {
@@ -192,6 +193,13 @@ namespace VP_QM_winform.Controller
             string outputFileName = Path.Combine(outputDir, $"output_{timestamp}.png");
             Cv2.ImWrite(outputFileName, img);
             Console.WriteLine($"결과 이미지 저장됨: {outputFileName}");
+
+            using (var memoryStream = new MemoryStream())
+            {
+                Cv2.ImEncode(".png", img, out byte[] imageBytes);
+                memoryStream.Write(imageBytes, 0, imageBytes.Length);
+                mqttDTO.NGImg = memoryStream.ToArray(); // DTO에 이미지 바이트 배열 저장
+            }
 
             return isGood ? ImageProcessingResult.Success : ImageProcessingResult.Failure;
         }

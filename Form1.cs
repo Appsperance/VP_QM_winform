@@ -15,7 +15,7 @@ namespace VP_QM_winform
     public partial class Form1 : Form
     {
         ProcessService process = new ProcessService();
-        MQTTManager mqttManager = new MQTTManager();
+        
         public Form1()
         {
             InitializeComponent();
@@ -33,10 +33,10 @@ namespace VP_QM_winform
 
         private async void button3_Click(object sender, EventArgs e)
         {
-            string brokerAddress = "43.203.159.137";
+            /*string brokerAddress = "43.203.159.137";
             string username = "admin";
             string password = "vapor";
-            await mqttManager.ConnectAsync(brokerAddress,1883 ,username, password);
+            await mqttManager.ConnectAsync(brokerAddress,1883 ,username, password);*/
         }
     }
 }
