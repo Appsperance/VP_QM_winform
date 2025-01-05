@@ -12,6 +12,9 @@ namespace VP_QM_winform.Service
         // ConcurrentDictionary를 사용하여 멀티 쓰레드의 상태를 중앙에서 관리
         public static ConcurrentDictionary<string,object> State = new ConcurrentDictionary<string,object>();
 
+        // 상태 변경 이벤트 정의
+        public static event Action<string, object> StateChanged;
+
         //상태 초기화 (애플리케이션 시작 시 호출)
         public static void Initialize()
         {
@@ -30,12 +33,25 @@ namespace VP_QM_winform.Service
         {
             if (State.ContainsKey(key))
             {
+                var oldValue = State[key];
                 State[key] = value;
+
+                // 값이 실제로 변경되었을 경우에만 이벤트 트리거
+                if (!Equals(oldValue, value))
+                {
+                    OnStateChanged(key, value);
+                }
             }
             else
             {
                 throw new ArgumentException($"상태 키 '{key}'가 존재하지 않습니다.");
             }
+        }
+
+        // 상태 변경 이벤트 트리거
+        private static void OnStateChanged(string key, object value)
+        {
+            StateChanged?.Invoke(key, value);
         }
 
         // 상태 읽기 메서드
