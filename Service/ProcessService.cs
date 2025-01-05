@@ -51,7 +51,7 @@ namespace VP_QM_winform.Service
             CancellationToken token = _cancellationTokenSource.Token;
 
             // 상태 초기화
-            ProcessState.UpdateState("CurrentStage", "Initializing");
+            ProcessState.UpdateState("CurrentStage", "waiting");
             ProcessState.UpdateState("ArduinoConnected", false);
             ProcessState.UpdateState("CameraConnected", false);
             ProcessState.UpdateState("MQTTConnected", false);        
@@ -94,10 +94,6 @@ namespace VP_QM_winform.Service
                     throw new InvalidOperationException("MQTT 연결 실패");
                 }
 
-                // 상태 전환: 대기 상태로 전환
-                ProcessState.UpdateState("CurrentStage", "Idle");
-                Console.WriteLine("시스템 초기화 완료, 대기 상태로 전환");
-
                 while (true)
                 {
                     // 작업이 취소되었는지 확인
@@ -106,6 +102,8 @@ namespace VP_QM_winform.Service
                     if (_arduinoController.serialReceiveData.Contains("PS_3=ON"))
                     {
                         ProcessState.UpdateState("CurrentStage", "sensor1");
+                        Console.WriteLine($"현재 stage: {ProcessState.GetState("CurrentStage")}");
+
                         _arduinoController.serialReceiveData = "";
                         _arduinoController.SendConveyorSpeed(200);
                         Console.WriteLine("물건 투입");
@@ -120,13 +118,14 @@ namespace VP_QM_winform.Service
                             Console.WriteLine($"MQTT 메시지 발행 중 오류 발생: {ex.Message}");
                         }
 
-                        // 상태 전환: 벨트 이동
-                        ProcessState.UpdateState("CurrentStage", "move");
+                        
                     }
                     //비전검사 이벤트
                     if (_arduinoController.serialReceiveData.Contains("PS_2=ON"))
                     {
                         ProcessState.UpdateState("CurrentStage", "sensor2");
+                        Console.WriteLine($"현재 stage: {ProcessState.GetState("CurrentStage")}");
+
                         _arduinoController.serialReceiveData = "";
                         await Task.Delay(1000, token); // 작업 취소 가능 대기
                         _arduinoController.SendConveyorSpeed(0);
@@ -162,7 +161,9 @@ namespace VP_QM_winform.Service
                     if (_arduinoController.serialReceiveData.Contains("PS_1=ON") &&
                         (bool)ProcessState.GetState("InspectionResult")==false)
                     {
-                        ProcessState.UpdateState("CurrentStage", "DefectiveHandling");
+                        ProcessState.UpdateState("CurrentStage", "sensor3");
+                        Console.WriteLine($"현재 stage: {ProcessState.GetState("CurrentStage")}");
+
                         _arduinoController.serialReceiveData = "";
                         _arduinoController.SendConveyorSpeed(0);
                         await Task.Delay(2000, token);
@@ -192,7 +193,7 @@ namespace VP_QM_winform.Service
 
                         _arduinoController.ResetPosition();
                         // 상태 전환: Idle
-                        ProcessState.UpdateState("CurrentStage", "Idle");
+                        ProcessState.UpdateState("CurrentStage", "waiting");
                         Console.WriteLine("불량품 처리 완료, 대기 상태로 전환");
                     }
                 }
@@ -215,6 +216,7 @@ namespace VP_QM_winform.Service
                 ProcessState.UpdateState("MQTTConnected", false);
 
                 ProcessState.UpdateState("CurrentStage", "Idle");
+                Console.WriteLine($"현재 stage: {ProcessState.GetState("CurrentStage")}");
             }
         }
 
