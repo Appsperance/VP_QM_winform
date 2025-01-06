@@ -18,6 +18,8 @@ namespace VP_QM_winform
     {
         ProcessService process = new ProcessService();
         private FormController formController;
+        private ChartController processChartController;
+        private ChartController ngChartController;
         public Form1()
         {
             InitializeComponent();
@@ -28,6 +30,21 @@ namespace VP_QM_winform
             formController.UpdatePictureBoxImage(ProcessState.GetState("CurrentStage").ToString());
             // 상태 변경 이벤트 등록
             ProcessState.StateChanged += OnStateChanged;
+
+            //차트 생성
+            processChartController = new ChartController(process_panel);
+            ngChartController = new ChartController(ng_panel);
+
+            // 임시 데이터 설정
+            int totalInspections = 100;   // 총 검사 수량
+            int currentInspections = 50;  // 현재 검사 수량
+            int defectiveCount = 10;      // 불량 수량
+
+            // 프로세스 차트 데이터 설정
+            processChartController.UpdateChart(totalInspections, currentInspections, defectiveCount, "Progress"); // 불량 데이터는 0으로 설정
+
+            // 불량률 차트 데이터 설정
+            ngChartController.UpdateChart(totalInspections, currentInspections, defectiveCount, "Defect");
         }
 
         // 상태 변경 이벤트 핸들러
