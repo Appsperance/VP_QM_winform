@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace VP_QM_winform.VO
 {
-    public class VisionNgVo
+    public class VisionNgVO
     {
         public int Id { get; set; } // id 컬럼: serial4
         public string LotId { get; set; } // lot_id 컬럼: varchar(20)
