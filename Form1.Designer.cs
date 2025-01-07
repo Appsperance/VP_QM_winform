@@ -31,7 +31,9 @@
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.CorpName = new System.Windows.Forms.Label();
-            this.CurrentTime = new System.Windows.Forms.Label();
+            this.tableLayoutPanel10 = new System.Windows.Forms.TableLayoutPanel();
+            this.btn_popup_login = new System.Windows.Forms.Button();
+            this.lb_time = new System.Windows.Forms.Label();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
             this.lb_workerId = new System.Windows.Forms.Label();
             this.lb_end = new System.Windows.Forms.Label();
@@ -58,8 +60,10 @@
             this.panel2 = new System.Windows.Forms.Panel();
             this.picture_state = new System.Windows.Forms.PictureBox();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.lb_userName = new System.Windows.Forms.Label();
             this.tableLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
+            this.tableLayoutPanel10.SuspendLayout();
             this.tableLayoutPanel3.SuspendLayout();
             this.tableLayoutPanel4.SuspendLayout();
             this.tableLayoutPanel5.SuspendLayout();
@@ -97,14 +101,14 @@
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel2.Controls.Add(this.CorpName, 0, 0);
-            this.tableLayoutPanel2.Controls.Add(this.CurrentTime, 1, 0);
+            this.tableLayoutPanel2.Controls.Add(this.tableLayoutPanel10, 1, 0);
             this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel2.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel2.Margin = new System.Windows.Forms.Padding(0);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
             this.tableLayoutPanel2.RowCount = 1;
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 69F));
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 71F));
             this.tableLayoutPanel2.Size = new System.Drawing.Size(997, 71);
             this.tableLayoutPanel2.TabIndex = 0;
             this.tableLayoutPanel2.Paint += new System.Windows.Forms.PaintEventHandler(this.tableLayoutPanel2_Paint);
@@ -122,19 +126,50 @@
             this.CorpName.Text = "HYUNDAI_INJ";
             this.CorpName.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // CurrentTime
+            // tableLayoutPanel10
             // 
-            this.CurrentTime.AutoSize = true;
-            this.CurrentTime.Dock = System.Windows.Forms.DockStyle.Right;
-            this.CurrentTime.Font = new System.Drawing.Font("굴림", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.CurrentTime.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.CurrentTime.Location = new System.Drawing.Point(929, 0);
-            this.CurrentTime.Margin = new System.Windows.Forms.Padding(3, 0, 20, 0);
-            this.CurrentTime.Name = "CurrentTime";
-            this.CurrentTime.Size = new System.Drawing.Size(48, 71);
-            this.CurrentTime.TabIndex = 1;
-            this.CurrentTime.Text = "label1";
-            this.CurrentTime.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.tableLayoutPanel10.ColumnCount = 1;
+            this.tableLayoutPanel10.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel10.Controls.Add(this.btn_popup_login, 0, 0);
+            this.tableLayoutPanel10.Controls.Add(this.lb_time, 0, 1);
+            this.tableLayoutPanel10.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel10.Location = new System.Drawing.Point(501, 3);
+            this.tableLayoutPanel10.Name = "tableLayoutPanel10";
+            this.tableLayoutPanel10.RowCount = 2;
+            this.tableLayoutPanel10.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 70F));
+            this.tableLayoutPanel10.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 30F));
+            this.tableLayoutPanel10.Size = new System.Drawing.Size(493, 65);
+            this.tableLayoutPanel10.TabIndex = 1;
+            // 
+            // btn_popup_login
+            // 
+            this.btn_popup_login.BackColor = System.Drawing.Color.MidnightBlue;
+            this.btn_popup_login.Dock = System.Windows.Forms.DockStyle.Right;
+            this.btn_popup_login.FlatAppearance.BorderSize = 0;
+            this.btn_popup_login.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btn_popup_login.Font = new System.Drawing.Font("굴림", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.btn_popup_login.ForeColor = System.Drawing.SystemColors.Control;
+            this.btn_popup_login.Location = new System.Drawing.Point(418, 0);
+            this.btn_popup_login.Margin = new System.Windows.Forms.Padding(0);
+            this.btn_popup_login.Name = "btn_popup_login";
+            this.btn_popup_login.Size = new System.Drawing.Size(75, 45);
+            this.btn_popup_login.TabIndex = 0;
+            this.btn_popup_login.Text = "로그인";
+            this.btn_popup_login.UseVisualStyleBackColor = false;
+            this.btn_popup_login.Click += new System.EventHandler(this.btn_popup_login_Click);
+            // 
+            // lb_time
+            // 
+            this.lb_time.AutoSize = true;
+            this.lb_time.Dock = System.Windows.Forms.DockStyle.Right;
+            this.lb_time.Font = new System.Drawing.Font("굴림", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.lb_time.ForeColor = System.Drawing.SystemColors.Control;
+            this.lb_time.Location = new System.Drawing.Point(433, 45);
+            this.lb_time.Name = "lb_time";
+            this.lb_time.Size = new System.Drawing.Size(57, 20);
+            this.lb_time.TabIndex = 1;
+            this.lb_time.Text = "현재시각";
+            this.lb_time.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // tableLayoutPanel3
             // 
@@ -152,6 +187,7 @@
             this.tableLayoutPanel3.Controls.Add(this.lb_lotId, 2, 0);
             this.tableLayoutPanel3.Controls.Add(this.lb_productId, 1, 0);
             this.tableLayoutPanel3.Controls.Add(this.lb_machineId, 0, 0);
+            this.tableLayoutPanel3.Controls.Add(this.lb_userName, 5, 1);
             this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel3.Location = new System.Drawing.Point(3, 74);
             this.tableLayoutPanel3.Name = "tableLayoutPanel3";
@@ -489,6 +525,18 @@
             this.dataGridView1.Size = new System.Drawing.Size(623, 208);
             this.dataGridView1.TabIndex = 1;
             // 
+            // lb_userName
+            // 
+            this.lb_userName.AutoSize = true;
+            this.lb_userName.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lb_userName.Font = new System.Drawing.Font("굴림", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.lb_userName.Location = new System.Drawing.Point(843, 41);
+            this.lb_userName.Name = "lb_userName";
+            this.lb_userName.Size = new System.Drawing.Size(145, 42);
+            this.lb_userName.TabIndex = 7;
+            this.lb_userName.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lb_userName.Click += new System.EventHandler(this.lb_userName_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
@@ -501,6 +549,8 @@
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel2.ResumeLayout(false);
             this.tableLayoutPanel2.PerformLayout();
+            this.tableLayoutPanel10.ResumeLayout(false);
+            this.tableLayoutPanel10.PerformLayout();
             this.tableLayoutPanel3.ResumeLayout(false);
             this.tableLayoutPanel3.PerformLayout();
             this.tableLayoutPanel4.ResumeLayout(false);
@@ -523,7 +573,6 @@
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
         private System.Windows.Forms.Label CorpName;
-        private System.Windows.Forms.Label CurrentTime;
         private System.Windows.Forms.Label lb_workerId;
         private System.Windows.Forms.Label lb_end;
         private System.Windows.Forms.Label lb_start;
@@ -549,6 +598,10 @@
         private System.Windows.Forms.Panel ng_panel;
         private System.Windows.Forms.Panel process_panel;
         private System.Windows.Forms.PictureBox picture_state;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel10;
+        private System.Windows.Forms.Button btn_popup_login;
+        private System.Windows.Forms.Label lb_time;
+        private System.Windows.Forms.Label lb_userName;
     }
 }
 
