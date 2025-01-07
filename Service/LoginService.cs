@@ -13,8 +13,12 @@ namespace VP_QM_winform.Service
     {
         private UserDAO userDAO;
 
-        public UserVO Login(string loginId, string loginPw)
+        // 현재 로그인된 사용자 정보를 보관할 static 필드
+        public static UserVO CurrentUser { get; private set; }
+
+        public void Login(string loginId, string loginPw)
         {
+            userDAO = new UserDAO();
             string storedHash = userDAO.GetHashedPwdByLoginId(loginId);
             string storedSalt = userDAO.GetSaltByLoginId(loginId);
 
@@ -23,10 +27,14 @@ namespace VP_QM_winform.Service
 
             if (result)
             {
-                return userDAO.Login(loginId);
+                CurrentUser = userDAO.Login(loginId);
+            }
+            else
+            {
+                Console.WriteLine("로그인 실패 : Service");
+
             }
 
-            return null;
         }
 
     }

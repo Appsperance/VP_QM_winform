@@ -11,19 +11,14 @@ namespace VP_QM_winform.DAO
 {
     public class UserDAO : IUserDAO
     {
-        private readonly SQLManager _sqlManager;
-
-        public UserDAO(SQLManager sqlManager)
-        {
-            _sqlManager = sqlManager;
-        }
+        private SQLManager sqlManager = new SQLManager(); 
 
         public UserVO Login(string loginId)
         {
             try
             {
-                var connection = _sqlManager.GetConnection();
-                var query = "SELECT * FROM users WHERE login_id = @loginId;";
+                var connection = sqlManager.GetConnection();
+                var query = "SELECT * FROM \"user\" WHERE login_id = @loginId;";
                 return connection.QueryFirstOrDefault<UserVO>(query, new { loginId });
             }
             catch (Exception ex)
@@ -37,8 +32,8 @@ namespace VP_QM_winform.DAO
         {
             try
             {
-                var connection = _sqlManager.GetConnection();
-                var query = "SELECT login_pw FROM users WHERE login_id = @loginId";
+                var connection = sqlManager.GetConnection();
+                var query = "SELECT login_pw FROM \"user\" WHERE login_id = @loginId";
                 return connection.QueryFirstOrDefault<string>(query, new { loginId });
             }
             catch (Exception ex)
@@ -52,8 +47,8 @@ namespace VP_QM_winform.DAO
         {
             try
             {
-                var connection = _sqlManager.GetConnection();
-                var query = "SELECT salt FROM users WHERE login_id = @loginId";
+                var connection = sqlManager.GetConnection();
+                var query = "SELECT salt FROM \"user\" WHERE login_id = @loginId";
                 return connection.QueryFirstOrDefault<string>(query, new { loginId });
             }
             catch (Exception ex)

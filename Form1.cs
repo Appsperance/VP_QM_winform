@@ -94,5 +94,37 @@ namespace VP_QM_winform
                 MessageBox.Show($"오류 발생: {ex.Message}");
             }
         }
+
+        private void btn_popup_login_Click(object sender, EventArgs e)
+        {
+            // Login 폼 인스턴스 생성
+            Login loginForm = new Login();
+            // LoginSuccess 이벤트 구독
+            loginForm.LoginSuccess += UpdateUserName;
+
+            // 부모 폼(Form1)의 중심 좌표 계산
+            int centerX = this.Location.X + (this.Width - loginForm.Width) / 2;
+            int centerY = this.Location.Y + (this.Height - loginForm.Height) / 2;
+
+            // Login 폼 위치 설정
+            loginForm.StartPosition = FormStartPosition.Manual;
+            loginForm.Location = new System.Drawing.Point(centerX, centerY);
+
+            // Login 폼 열기
+            loginForm.ShowDialog();
+        }
+
+        // LoginSuccess 이벤트 발생 시 호출될 메서드
+        private void UpdateUserName(string userName)
+        {
+            // lb_userName에 로그인된 사용자 이름 설정
+            Console.WriteLine($"updateUserName 호출: { userName}");
+            lb_userName.Text = $"{userName}";
+        }
+
+        private void lb_userName_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

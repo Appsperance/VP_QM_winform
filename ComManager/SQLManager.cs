@@ -6,7 +6,7 @@ namespace VP_QM_winform.ComManager
 {
     public class SQLManager
     {
-        private readonly string _connectionString = "Host=localhost;Port=5432;Username=root;Password=vapor;Database=msd_db;";
+        private readonly string _connectionString = "Host=localhost;Port=5432;Username=root;Password=vaporcloud;Database=msd_db;";
         private IDbConnection _connection;
 
         /// <summary>
