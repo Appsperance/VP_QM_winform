@@ -11,7 +11,7 @@ namespace VP_QM_winform.DTO
         public string LineId {  get; set; }
         public string LotId { get; set; }
         public string Shift { get; set; }
-        public string EmployeeNumber {  get; set; }
+        public int EmployeeNumber {  get; set; }
         public byte[] NGImg { get; set; }
         public string StageVal { get; set; }
 

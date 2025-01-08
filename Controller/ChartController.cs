@@ -91,7 +91,7 @@ namespace VP_QM_winform.Controller
             // 중앙에 퍼센티지 표시
             string percentageText = $"{percentage:F1}%";
             using (Font font = new Font("Arial", 14, FontStyle.Bold))
-            using (Brush textBrush = new SolidBrush(Color.Black))
+            using (Brush textBrush = new SolidBrush(Color.White))
             {
                 SizeF textSize = g.MeasureString(percentageText, font);
                 float textX = chartPanel.Width / 2 - textSize.Width / 2;

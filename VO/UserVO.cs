@@ -13,9 +13,13 @@ namespace VP_QM_winform.VO
         public string LoginPw { get; set; }
         public string Salt { get; set; }
         public string Name { get; set; }
-        public string EmployeeNumber { get; set; }
+        public int EmployeeNumber { get; set; }
         public string Roles { get; set; }
-        public string ProfileImg { get; set; }
-        public string ProfileText { get; set; }
+
+        public override string ToString()
+        {
+            return $"UserVO [Id={Id}, LoginId={LoginId}, LoginPw={LoginPw}, Salt={Salt}, Name={Name}, " +
+                   $"EmployeeNumber={EmployeeNumber}, Roles={Roles}";
+        }
     }
 }

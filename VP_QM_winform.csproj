@@ -119,8 +119,15 @@
     <Compile Include="Controller\FormController.cs" />
     <Compile Include="Controller\VisionController.cs" />
     <Compile Include="Controller\VKeyController.cs" />
+    <Compile Include="DAO\EmployeeDAO.cs" />
+    <Compile Include="DAO\IEmployeeDAO.cs" />
+    <Compile Include="DAO\ILotDAO.cs" />
     <Compile Include="DAO\IUserDAO.cs" />
+    <Compile Include="DAO\IVisionCumDAO.cs" />
+    <Compile Include="DAO\LotDao.cs" />
     <Compile Include="DAO\UserDAO.cs" />
+    <Compile Include="DAO\VisionCumDAO.cs" />
+    <Compile Include="DTO\LoginDTO.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -128,7 +135,10 @@
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
     <Compile Include="DTO\MQTTDTO.cs" />
+    <Compile Include="Helper\DapperExtensions.cs" />
+    <Compile Include="Helper\Global.cs" />
     <Compile Include="Helper\PasswordHasher.cs" />
+    <Compile Include="Helper\SnakeCaseMapper.cs" />
     <Compile Include="Login.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -140,8 +150,10 @@
     <Compile Include="Service\LoginService.cs" />
     <Compile Include="Service\ProcessService.cs" />
     <Compile Include="Service\ProcessState.cs" />
+    <Compile Include="Service\SettingJobService.cs" />
+    <Compile Include="Service\VisionCumService.cs" />
     <Compile Include="VO\EmployeeVO.cs" />
-    <Compile Include="VO\InjectionCumVO.cs" />
+    <Compile Include="VO\LotVO.cs" />
     <Compile Include="VO\UserVO.cs" />
     <Compile Include="VO\VisionCumVO.cs" />
     <Compile Include="VO\VisionNgVO.cs" />
