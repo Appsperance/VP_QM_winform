@@ -20,10 +20,12 @@ namespace VP_QM_winform.Controller
 
         public ArduinoController()
         {
+            ConnectToArduinoUno();
+            
         }
 
         // 아두이노 연결 설정
-        public async Task<bool> ConnectToArduinoUnoAsync()
+        public bool ConnectToArduinoUno()
         {
             var ports = GetSerialPortDescriptions();
             foreach (var port in ports)
@@ -35,11 +37,11 @@ namespace VP_QM_winform.Controller
                     if (port.Description.Contains("Arduino Uno"))
                     {
                         Console.WriteLine("아두이노 초기화 대기 중...");
-                        await Task.Delay(2000); // 비동기로 대기
+                        Thread.Sleep(2000); // 동기 대기
 
                         serialPort = new SerialPort(port.PortName, 9600);
                         serialPort.Open();
-                        if(serialPort != null && serialPort.IsOpen)
+                        if (serialPort != null && serialPort.IsOpen)
                         {
                             _isConnected = true; // 연결 상태 업데이트
                             Console.WriteLine($"Arduino Uno가 포트 {port.PortName}에 연결되었습니다.");
@@ -53,7 +55,7 @@ namespace VP_QM_winform.Controller
                 }
                 catch (Exception ex)
                 {
-                    //상태 업데이트
+                    // 상태 업데이트
                     _isConnected = false; // 연결 실패 상태
                     Console.WriteLine($"포트 {port.PortName} 스캔 중 오류: {ex.Message}");
                 }
@@ -228,8 +230,51 @@ namespace VP_QM_winform.Controller
             SendServo3Angle(95);
 
         }
+        //타워램프 관련 메소드
+        public void LampOn(string color, bool onOff)
+        {
+            color.ToUpper();
+            if (onOff)
+            {
+                serialPort.WriteLine($"LAMP_{color}=ON");
+            }
+            else
+            {
+                serialPort.WriteLine($"LAMP_{color}=OFF");
+            }
+        }
 
-        
+        private bool _flashLampRunning = false;
+
+        public async Task FlashLamp(string color, bool onOff)
+        {
+            if (onOff)
+            {
+                // 이미 실행 중이라면 중복 실행 방지
+                if (_flashLampRunning)
+                    return;
+
+                _flashLampRunning = true;
+
+                color = color.ToUpper();
+                while (_flashLampRunning)
+                {
+                    // 램프 켜기
+                    serialPort.WriteLine($"LAMP_{color}=ON");
+                    await Task.Delay(1000); // 1초 대기
+
+                    // 램프 끄기
+                    serialPort.WriteLine($"LAMP_{color}=OFF");
+                    await Task.Delay(1000); // 1초 대기
+                }
+            }
+            else
+            {
+                // 깜빡이는 동작 중단
+                _flashLampRunning = false;
+            }
+        }
+
 
     }
 }

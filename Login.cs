@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using VP_QM_winform.Controller;
+using VP_QM_winform.Helper;
 using VP_QM_winform.Service;
 
 namespace VP_QM_winform
@@ -47,10 +48,10 @@ namespace VP_QM_winform
             try
             {
                 loginService.Login(loginId, loginPw);
-                if (LoginService.CurrentUser != null)
+                if (Global.s_LoginDTO.User != null)
                 {
                     // 로그인 성공 이벤트 호출
-                    LoginSuccess?.Invoke(LoginService.CurrentUser.Name); // 사용자 이름 전달
+                    LoginSuccess?.Invoke(Global.s_LoginDTO.User.Name); // 사용자 이름 전달
                     this.Close(); // 로그인 창 닫기
                 }
 

@@ -12,7 +12,7 @@ namespace VP_QM_winform.VO
         public DateTime Time { get; set; } // time 컬럼: timestamptz
         public string LotId { get; set; } // lot_id 컬럼: varchar(20)
         public string Shift { get; set; } // shift 컬럼: varchar(4)
-        public string EmployeeNumber { get; set; } // employee_number 컬럼: bpchar(10)
+        public int EmployeeNumber { get; set; } // employee_number 컬럼: bpchar(10)
         public int Total { get; set; } // total 컬럼: int4
     }
 }

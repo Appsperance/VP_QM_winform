@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
 using System.Windows.Forms;
+using VP_QM_winform.Helper;
 
 namespace VP_QM_winform.Controller
 {
@@ -12,13 +13,17 @@ namespace VP_QM_winform.Controller
     {
         private PictureBox pictureBox;
         private Dictionary<string, Image> imageStates;
+        private BindingSource visionBindingSource = new BindingSource();
+        private DataGridView _dataGridView;
 
         //생성시 이미지 초기화
-        public FormController(PictureBox pictureBox)
+        public FormController(PictureBox pictureBox, DataGridView dataGridView)
         {
             this.pictureBox = pictureBox;
+            _dataGridView = dataGridView;
             InitializePictureBox();
             InitializeImages();
+            
         }
         // PictureBox 초기 설정
         private void InitializePictureBox()
@@ -54,6 +59,22 @@ namespace VP_QM_winform.Controller
             {
                 throw new ArgumentException($"이미지 상태 '{state}'가 존재하지 않습니다.");
             }
+        }
+
+        public void InitializeDataGridView()
+        {
+            // DataGridView와 BindingSource 연결
+            visionBindingSource.DataSource = Global.s_VisionCumList;
+            _dataGridView.DataSource = visionBindingSource;
+
+            // 컬럼 자동 생성
+            _dataGridView.AutoGenerateColumns = true;
+        }
+
+        public void RefreshDataGridView()
+        {
+            // DataGridView 갱신
+            visionBindingSource.ResetBindings(false);
         }
 
     }

@@ -19,7 +19,7 @@ namespace VP_QM_winform.Controller
         // 생성자: 카메라 연결 포함 여부에 따라 변경 가능
         public CameraController()
         {
-            
+            Connect();
         }
 
         // 카메라 연결 메서드
