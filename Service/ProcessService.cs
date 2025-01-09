@@ -22,6 +22,7 @@ namespace VP_QM_winform.Service
         private readonly VisionController _visionController;
         private readonly MQTTManager _MQTTManager;
         private VisionCumVO _visionCumVO;
+        private VPBusManager _busManager;
 
         private CancellationTokenSource _cancellationTokenSource;
 
@@ -40,6 +41,8 @@ namespace VP_QM_winform.Service
             ProcessState.UpdateState("CameraConnected", true);
             _visionController = new VisionController();
             _MQTTManager = new MQTTManager(brokerAddress, port, username, password);
+            _busManager = new VPBusManager();
+            _busManager.Connect();
         }
 
         public async Task RunAsync()
@@ -183,6 +186,7 @@ namespace VP_QM_winform.Service
                         }
 
                         // DB 쿼리 전송
+                        /*
                         VisionCumService visionCumService = new VisionCumService();
                         try
                         {
@@ -191,6 +195,17 @@ namespace VP_QM_winform.Service
                         catch (Exception ex)
                         {
                             Console.WriteLine("DB Insert 실패 : processService");
+                        }
+                        */
+
+                        //소켓 서버 전송
+                        try
+                        {
+                            _busManager.SendData(_visionCumVO);
+                        }
+                        catch (Exception ex) 
+                        {
+                            Console.WriteLine($"소켓서버 데이터 전송 실패: {ex}");
                         }
 
                         if (!inspectionResult) // 검사 결과가 Bad인 경우

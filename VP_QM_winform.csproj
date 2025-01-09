@@ -113,6 +113,7 @@
   <ItemGroup>
     <Compile Include="ComManager\MQTTManager.cs" />
     <Compile Include="ComManager\SQLManager.cs" />
+    <Compile Include="ComManager\VPBusManager.cs" />
     <Compile Include="Controller\ArduinoController.cs" />
     <Compile Include="Controller\CameraController.cs" />
     <Compile Include="Controller\ChartController.cs" />
