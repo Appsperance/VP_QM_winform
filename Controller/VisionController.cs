@@ -3,9 +3,6 @@ using OpenCvSharp;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using VP_QM_winform.DTO;
 using VP_QM_winform.Service;
 
@@ -18,9 +15,7 @@ namespace VP_QM_winform.Controller
         Failure, // "good"이 아닌 다른 클래스가 발견된 경우
         PreprocessingError, // 전처리 중 오류 발생
         ModelError, // 모델 실행 중 오류 발생
-        NoImg //이미지가 없음
-
-
+        NoImg //이미지가 없음W
     }
     public class VisionController
     {

@@ -102,6 +102,9 @@ namespace VP_QM_winform
             {
                 try
                 {
+                    btn_start.Text = "중지";
+                    btn_start.BackColor = System.Drawing.Color.Red;
+                    btn_start.FlatAppearance.BorderColor = System.Drawing.Color.Magenta;
                     // 백그라운드 작업 시작
                     await Task.Run(() => process.RunAsync());
                 }
@@ -110,9 +113,7 @@ namespace VP_QM_winform
                     // 예외 처리 (필요에 따라 메시지 박스 또는 로그 추가)
                     MessageBox.Show($"오류 발생: {ex.Message}");
                 }
-                btn_start.Text = "중지";
-                btn_start.BackColor = System.Drawing.Color.Red;
-                btn_start.FlatAppearance.BorderColor = System.Drawing.Color.Magenta;
+                
             }else if(txt == "중지")
             {
                 //중지 메소드
@@ -170,15 +171,20 @@ namespace VP_QM_winform
             btn_popup_login.Text = $"{userName}";
         }
 
-        private void btn_getLot_Click(object sender, EventArgs e)
+        private async void btn_getLot_Click(object sender, EventArgs e)
         {
-            var result = settingJobService.GetLotList();
+            // 비동기 작업의 결과를 기다림
+            var result = await settingJobService.GetLotList();
+
             cb_lot.Items.Clear();
             cb_lot.Items.Add("작업을 선택하세요.");
+
+            // 결과를 foreach로 순회
             foreach (var lot in result)
             {
-                cb_lot.Items.Add(lot.Id); // 예: Lot의 Id를 표시
+                cb_lot.Items.Add(lot);
             }
+
             cb_lot.SelectedIndex = 0;
         }
 

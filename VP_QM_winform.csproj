@@ -111,6 +111,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ComManager\HttpManager.cs" />
     <Compile Include="ComManager\MQTTManager.cs" />
     <Compile Include="ComManager\SQLManager.cs" />
     <Compile Include="ComManager\VPBusManager.cs" />
