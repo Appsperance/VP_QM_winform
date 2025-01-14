@@ -147,10 +147,10 @@
             this.btn_popup_login.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btn_popup_login.Font = new System.Drawing.Font("나눔고딕", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
             this.btn_popup_login.ForeColor = System.Drawing.SystemColors.Control;
-            this.btn_popup_login.Location = new System.Drawing.Point(418, 0);
+            this.btn_popup_login.Location = new System.Drawing.Point(310, 0);
             this.btn_popup_login.Margin = new System.Windows.Forms.Padding(0);
             this.btn_popup_login.Name = "btn_popup_login";
-            this.btn_popup_login.Size = new System.Drawing.Size(75, 65);
+            this.btn_popup_login.Size = new System.Drawing.Size(183, 65);
             this.btn_popup_login.TabIndex = 0;
             this.btn_popup_login.Text = "로그인";
             this.btn_popup_login.UseVisualStyleBackColor = false;

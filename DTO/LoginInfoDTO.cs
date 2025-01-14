@@ -13,5 +13,7 @@ namespace VP_QM_winform.DTO
         public string Name { get; set; }
         public string Shift { get; set; }
         public string Photo { get; set; }
+        public string Role { get; set; }
+        public string JwtToken { get; set; }
     }
 }

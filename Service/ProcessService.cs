@@ -185,19 +185,6 @@ namespace VP_QM_winform.Service
                             Console.WriteLine($"MQTT 메시지 발행 중 오류 발생: {ex.Message}");
                         }
 
-                        // DB 쿼리 전송
-                        /*
-                        VisionCumService visionCumService = new VisionCumService();
-                        try
-                        {
-                            visionCumService.InsertVision(_visionCumVO);
-                        }
-                        catch (Exception ex)
-                        {
-                            Console.WriteLine("DB Insert 실패 : processService");
-                        }
-                        */
-
                         //소켓 서버 전송
                         try
                         {

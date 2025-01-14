@@ -1,15 +1,12 @@
 ﻿using Newtonsoft.Json;
 using System;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Cryptography;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Microsoft.IdentityModel.Tokens;
-
 using VP_QM_winform.ComManager;
 using VP_QM_winform.DTO;
 using VP_QM_winform.Helper;
-
+using System.Text.Json;
+using System.Text;
 
 namespace VP_QM_winform.Service
 {
@@ -28,85 +25,66 @@ namespace VP_QM_winform.Service
             try
             {
                 HttpResponseMessage responseMessage = await HttpManager.PostAsync(apiUri, loginReqDTO);
-                if (responseMessage.IsSuccessStatusCode)
+                if (!responseMessage.IsSuccessStatusCode)
                 {
-                    string responseContent = await responseMessage.Content.ReadAsStringAsync();
-                    _loginResDTO = JsonConvert.DeserializeObject<LoginResDTO>(responseContent);
-
-                    /****************************
-                     * JWT 토큰 유효성 검사 로직*
-                     ***************************/
-/*                    if (_loginResDTO != null && !string.IsNullOrEmpty(_loginResDTO.JwtToken))
-                    {
-                        string publicKey = _loginResDTO.JwtPublicKey; // 응답에서 공개 키 가져오기
-                        string jwtToken = _loginResDTO.JwtToken; // 응답에서 JWT 토큰 가져오기
-
-                        bool isTokenValid = ValidateToken(jwtToken, publicKey);
-                        if (isTokenValid) 
-                        {
-                            //스태틱 로그인 변수에 추가
-                            Global.s_LoginDTO = new LoginInfoDTO()
-                            {
-                                LoginId = _loginResDTO.LoginId,
-                                EmployeeNumber = _loginResDTO.EmployeeNumber,
-                                Name = _loginResDTO.Name,
-                                Shift = _loginResDTO.Shift,
-                                Photo = _loginResDTO.Photo
-                            };
-                        }
-                        else
-                        {
-                            throw new Exception("JWT 토큰이 유효하지 않습니다.");
-                        }
-                    }
-                    else
-                    {
-                        throw new Exception("JWT 토큰 또는 공개 키가 없습니다.");
-                    }
-
-   */                 
+                    throw new Exception("로그인 요청이 실패했습니다.");
                 }
-            }
-            catch (Exception e) 
-            {
-                Console.WriteLine($"로그인 실패: {e}");
-            }
 
-        }
-/*
-        //토큰 검증 메서드
-        public bool ValidateToken(string jwtToken, string publicKey)
-        {
-            try
-            {
-                // 공개 키를 RSA 객체로 변환
-                var rsa = TokenHepler.CreateRsaFromPublicKey(publicKey);
+                string responseContent = await responseMessage.Content.ReadAsStringAsync();
+                LoginResDTO _loginResDTO = JsonConvert.DeserializeObject<LoginResDTO>(responseContent);
 
-                // RSA 키를 기반으로 한 RsaSecurityKey 생성
-                var securityKey = new RsaSecurityKey(rsa);
+                string jwtToken = _loginResDTO.JwtToken; // 응답에서 JWT 토큰 가져오기
+                string result = GetRoleFromJwt(jwtToken);
+                Console.WriteLine(result);
 
-                // 토큰 검증 매개변수 설정
-                var validationParameters = new TokenValidationParameters
+                Global.s_LoginDTO = new LoginInfoDTO()
                 {
-                    ValidateIssuer = false,
-                    ValidateAudience = false,
-                    ValidateLifetime = true,
-                    IssuerSigningKey = securityKey
+                    LoginId = _loginResDTO.LoginId,
+                    EmployeeNumber = _loginResDTO.EmployeeNumber,
+                    Name = _loginResDTO.Name,
+                    Shift = _loginResDTO.Shift,
+                    Photo = _loginResDTO.Photo,
+                    Role = result,
+                    JwtToken = jwtToken
                 };
-
-                // JWT 토큰 핸들러
-                var tokenHandler = new JwtSecurityTokenHandler();
-                tokenHandler.ValidateToken(jwtToken, validationParameters, out _);
-
-                Console.WriteLine("Token is valid.");
-                return true;
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Token validation failed: {ex.Message}");
-                return false;
+                Console.WriteLine($"[Error] {ex.Message}");
+                throw;
             }
         }
-*/
+
+        static string GetRoleFromJwt(string jwt)
+        {
+            try
+            {
+                // JWT의 두 번째 부분 (Payload)을 '.'로 나눈 뒤 추출
+                string payloadEncoded = jwt.Split('.')[1];
+
+                // Base64Url 디코딩 (패딩 문제 처리 포함)
+                string paddedPayload = payloadEncoded.PadRight(payloadEncoded.Length + (4 - payloadEncoded.Length % 4) % 4, '=');
+                byte[] payloadBytes = Convert.FromBase64String(paddedPayload);
+                string payloadJson = Encoding.UTF8.GetString(payloadBytes);
+
+                // JSON 파싱
+                var payload = JsonDocument.Parse(payloadJson);
+
+                // "role" 키의 값 추출
+                string roleKey = "http://schemas.microsoft.com/ws/2008/06/identity/claims/role";
+                if (payload.RootElement.TryGetProperty(roleKey, out var roleElement))
+                {
+                    return roleElement.GetString();
+                }
+                else
+                {
+                    throw new Exception("Role not found in JWT payload.");
+                }
+            }
+            catch (Exception ex)
+            {
+                return $"Error: {ex.Message}";
+            }
+        }
     }
 }
