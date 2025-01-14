@@ -191,13 +191,13 @@ namespace VP_QM_winform
         private void btn_choiceLot_Click(object sender, EventArgs e)
         {
             var lot = cb_lot.Text;
-            Global.s_CurrentLot = lot;
-            Console.WriteLine($"현재 Lot: { Global.s_CurrentLot}");
+            Global.s_MenuDTO.LotId = lot;
+            Console.WriteLine($"현재 Lot: { Global.s_MenuDTO.LotId}");
         }
 
         private void Logout()
         {
-            if (ProcessState.GetState("CurrentStage") == "Idle")
+            if ((string)ProcessState.GetState("CurrentStage") == "Idle")
             {
                 Global.s_LoginDTO = null;
                 btn_popup_login.Text = "로그인";

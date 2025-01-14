@@ -53,7 +53,7 @@ namespace VP_QM_winform.Service
             MQTTDTO dto = new MQTTDTO
             {
                 LineId = "Line001",
-                LotId = Global.s_CurrentLot,
+                LotId = Global.s_MenuDTO.LotId,
                 Shift = Global.s_LoginDTO.Shift,
                 EmployeeNumber = Global.s_LoginDTO.EmployeeNumber
             };
@@ -167,7 +167,7 @@ namespace VP_QM_winform.Service
                         {
                             LineId = "vp1",
                             Time = DateTime.Now,
-                            LotId = Global.s_CurrentLot,
+                            LotId = Global.s_MenuDTO.LotId,
                             Shift = Global.s_LoginDTO.Shift,
                             EmployeeNumber = Global.s_LoginDTO.EmployeeNumber,
                             Total = Global.s_VisionCumList.Count + 1

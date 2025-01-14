@@ -11,9 +11,7 @@ namespace VP_QM_winform.Controller
 {
     public class CameraController : IDisposable
     {
-        private CancellationTokenSource captureCancellationTokenSource;
         private VideoCapture videoCapture;
-        private string saveDirectory;
         private bool _isConnected; // 연결 상태 플래그
         public bool IsConnected => _isConnected; // 연결 상태를 확인하는 속성
         // 생성자: 카메라 연결 포함 여부에 따라 변경 가능

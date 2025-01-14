@@ -62,7 +62,7 @@ namespace VP_QM_winform
             }
             catch (Exception ex) 
             {
-                MessageBox.Show("로그인 실패 : Form");
+                MessageBox.Show($"로그인 실패 : {ex}");
             }
 
         }

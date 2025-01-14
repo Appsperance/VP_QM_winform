@@ -159,6 +159,7 @@
     <Compile Include="DTO\LoginInfoDTO.cs" />
     <Compile Include="DTO\LoginResDTO.cs" />
     <Compile Include="DTO\LoginReqDTO.cs" />
+    <Compile Include="DTO\MenuInfoDTO.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -12,9 +12,7 @@ namespace VP_QM_winform.Helper
     {
         public static List<VisionCumVO> s_VisionCumList { get; set; } = new List<VisionCumVO>();
         public static LoginInfoDTO s_LoginDTO { get; set; }
-        public static UserVO s_CurrentUser { get; set; }
-        public static string s_CurrentLot { get; set; }
-        public static string s_LineId { get; set; } 
+        public static MenuInfoDTO s_MenuDTO { get; set; }
         
     }
 }
