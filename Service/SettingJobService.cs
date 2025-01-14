@@ -12,12 +12,12 @@ namespace VP_QM_winform.Service
 {
     public class SettingJobService
     {
-        private LotDao lotDao;
-
         public async Task <List<string>> GetLotList()
         {
-            lotDao = new LotDao();
-            string apiUri = "https://localhost:7144/api/lots/completed";
+            //로컬 서버 주소
+            //string apiUri = "https://localhost:7144/api/lots/completed";
+            //개발 서버 주소
+            string apiUri = "http://13.125.114.64:5282/api/lots/completed";
 
             try
             {

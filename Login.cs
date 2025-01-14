@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using VP_QM_winform.Controller;
+using VP_QM_winform.DTO;
 using VP_QM_winform.Helper;
 using VP_QM_winform.Service;
 
@@ -39,19 +40,22 @@ namespace VP_QM_winform
             VKeyController.HideKeyboard(); // 키보드 종료
         }
 
-        private void btn_login_Click(object sender, EventArgs e)
+        private async void btn_login_Click(object sender, EventArgs e)
         {
             loginService = new LoginService();
-            string loginId = tb_id.Text;
-            string loginPw = tb_pwd.Text;
+            LoginReqDTO loginReqDTO = new LoginReqDTO() 
+            {
+                loginId = tb_id.Text,
+                loginPw = tb_pwd.Text
+            };
 
             try
             {
-                loginService.Login(loginId, loginPw);
-                if (Global.s_LoginDTO.User != null)
+                await loginService.Login(loginReqDTO);
+                if (Global.s_LoginDTO != null)
                 {
                     // 로그인 성공 이벤트 호출
-                    LoginSuccess?.Invoke(Global.s_LoginDTO.User.Name); // 사용자 이름 전달
+                    LoginSuccess?.Invoke(Global.s_LoginDTO.Name); // 사용자 이름 전달
                     this.Close(); // 로그인 창 닫기
                 }
 

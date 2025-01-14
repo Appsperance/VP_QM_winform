@@ -54,8 +54,8 @@ namespace VP_QM_winform.Service
             {
                 LineId = "Line001",
                 LotId = Global.s_CurrentLot,
-                Shift = Global.s_LoginDTO.Employee.Shift,
-                EmployeeNumber = Global.s_LoginDTO.User.EmployeeNumber
+                Shift = Global.s_LoginDTO.Shift,
+                EmployeeNumber = Global.s_LoginDTO.EmployeeNumber
             };
 
             // 새 CancellationTokenSource 생성
@@ -168,8 +168,8 @@ namespace VP_QM_winform.Service
                             LineId = "vp1",
                             Time = DateTime.Now,
                             LotId = Global.s_CurrentLot,
-                            Shift = Global.s_LoginDTO.Employee.Shift,
-                            EmployeeNumber = Global.s_LoginDTO.User.EmployeeNumber,
+                            Shift = Global.s_LoginDTO.Shift,
+                            EmployeeNumber = Global.s_LoginDTO.EmployeeNumber,
                             Total = Global.s_VisionCumList.Count + 1
                         };
                         Global.s_VisionCumList.Add(_visionCumVO);

@@ -11,7 +11,7 @@ namespace VP_QM_winform.Helper
     public static class Global
     {
         public static List<VisionCumVO> s_VisionCumList { get; set; } = new List<VisionCumVO>();
-        public static LoginDTO s_LoginDTO { get; set; } = new LoginDTO();
+        public static LoginInfoDTO s_LoginDTO { get; set; }
         public static UserVO s_CurrentUser { get; set; }
         public static string s_CurrentLot { get; set; }
         public static string s_LineId { get; set; } 

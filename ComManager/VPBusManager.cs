@@ -13,13 +13,15 @@ namespace VP_QM_winform.ComManager
         //TCP소켓 클라이언트 
         private TcpClient client;
         private NetworkStream stream;
-
-        // 서버 연결 메서드 (한 번 연결 유지)
+        //로컬호스트
+        private const string addr = "127.0.0.1";
+        //private const string addr = "13.125.114";
+        
         public void Connect()
         {
             try
             {
-                client = new TcpClient("127.0.0.1", 51900);
+                client = new TcpClient(addr, 51900);
                 stream = client.GetStream();
                 Console.WriteLine("[CLIENT] Connected to server.");
             }
