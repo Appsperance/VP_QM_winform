@@ -74,30 +74,34 @@ namespace VP_QM_winform.ComManager
         {
             // 데이터 변환
             byte[] lineIdBytes = Encoding.ASCII.GetBytes(visionCumVO.LineId.PadRight(4, '\0')); // LineId (4바이트)
-            byte[] timeBytes = BitConverter.GetBytes(
-                (long)(visionCumVO.Time.ToUniversalTime() - new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalMilliseconds * 1000
-            ); // Time (8바이트, PostgreSQL Epoch 기준 마이크로초)
-            byte[] lotIdBytes = Encoding.ASCII.GetBytes(visionCumVO.LotId.PadRight(10, '\0')); // LotId (10바이트)
+            byte[] timeBytes = BitConverter.GetBytes(new DateTimeOffset(visionCumVO.Time).ToUnixTimeSeconds());
+            byte[] lotIdBytes = Encoding.ASCII.GetBytes(visionCumVO.LotId.PadRight(20, '\0')); // LotId (20바이트)
             byte[] shiftBytes = Encoding.ASCII.GetBytes(visionCumVO.Shift.PadRight(4, '\0')); // Shift (4바이트)
-            byte[] employeeNumberBytes = BitConverter.GetBytes((long)visionCumVO.EmployeeNumber); // EmployeeNumber (8바이트)
+            byte[] employeeNumberBytes = BitConverter.GetBytes((long)visionCumVO.EmployeeNumber); // EmployeeNumber (10바이트)
             byte[] totalBytes = BitConverter.GetBytes(visionCumVO.Total); // Total (4바이트)
 
             // 페이로드 생성
-            byte[] payload = new byte[38];
+            byte[] payload = new byte[50];
             Buffer.BlockCopy(lineIdBytes, 0, payload, 0, lineIdBytes.Length);
             Buffer.BlockCopy(timeBytes, 0, payload, 4, timeBytes.Length);
             Buffer.BlockCopy(lotIdBytes, 0, payload, 12, lotIdBytes.Length);
-            Buffer.BlockCopy(shiftBytes, 0, payload, 22, shiftBytes.Length);
-            Buffer.BlockCopy(employeeNumberBytes, 0, payload, 26, employeeNumberBytes.Length);
-            Buffer.BlockCopy(totalBytes, 0, payload, 34, totalBytes.Length);
+            Buffer.BlockCopy(shiftBytes, 0, payload, 32, shiftBytes.Length);
+            Buffer.BlockCopy(employeeNumberBytes, 0, payload, 36, employeeNumberBytes.Length);
+            Buffer.BlockCopy(totalBytes, 0, payload, 46, totalBytes.Length);
 
             // 헤더 생성
-            byte messageLength = (byte)(2 + payload.Length); // Header(2바이트) + Payload
-            byte messageVersion = 1;
+            byte frameType = 2; // JWT = 1, CUM = 2
+            byte[] messageLength = BitConverter.GetBytes((ushort)payload.Length);
+            byte messageVersion = 1; // 프로토콜 버전
+            byte role = 2; // 예: 생산 = 1, 품질 = 2
+            byte reserved = 0; // 스페어
 
-            byte[] header = new byte[2];
-            header[0] = messageLength;
-            header[1] = messageVersion;
+            byte[] header = new byte[6];
+            header[0] = frameType;
+            Buffer.BlockCopy(messageLength, 0, header, 1, messageLength.Length); ;
+            header[3] = messageVersion;
+            header[4] = role;
+            header[5] = reserved;
 
             // 전체 메시지 생성
             byte[] message = new byte[header.Length + payload.Length];
