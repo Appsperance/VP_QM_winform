@@ -64,8 +64,6 @@ namespace VP_QM_winform.Service
 
             // 상태 초기화
             ProcessState.UpdateState("CurrentStage", "waiting");
-            
-            
             ProcessState.UpdateState("MQTTConnected", false);        
 
             try
@@ -114,8 +112,6 @@ namespace VP_QM_winform.Service
                         {
                             Console.WriteLine($"MQTT 메시지 발행 중 오류 발생: {ex.Message}");
                         }
-
-                        
                     }
                     //센서2 && 비전검사 이벤트
                     if (_arduinoController.serialReceiveData.Contains("PS_2=ON"))

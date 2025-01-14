@@ -5,6 +5,8 @@ using VP_QM_winform.Service;
 using VP_QM_winform.Controller;
 using VP_QM_winform.Helper;
 using VP_QM_winform.VO;
+using VP_QM_winform.DTO;
+using System.Linq;
 
 namespace VP_QM_winform
 {
@@ -80,23 +82,18 @@ namespace VP_QM_winform
             lb_currentTime.Text = currentTime;
         }
 
-        private void tableLayoutPanel4_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
-
-        private void tableLayoutPanel2_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
-
-        private void label1_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private async void btn_start_Click(object sender, EventArgs e)
         {
+            /*
+             * 시작/중지 토글 버튼 클릭시
+             * 시작인 경우
+             * 1. 중지 버튼으로 바꾼다.
+             * 2. Run메소드를 실행한다.
+             * 3. static MenuInfoDTO변수의 start에 현재 시간정보를 입력한다.
+             * 중지인 경우
+             * 1. 시작 버튼으로 바꾼다.
+             * 2. Run메소드를 중지한다.
+             */
             string txt = btn_start.Text;
             if(txt == "시작")
             {
@@ -105,6 +102,7 @@ namespace VP_QM_winform
                     btn_start.Text = "중지";
                     btn_start.BackColor = System.Drawing.Color.Red;
                     btn_start.FlatAppearance.BorderColor = System.Drawing.Color.Magenta;
+                    Global.s_MenuDTO.Start = DateTime.Now;
                     // 백그라운드 작업 시작
                     await Task.Run(() => process.RunAsync());
                 }
@@ -112,8 +110,7 @@ namespace VP_QM_winform
                 {
                     // 예외 처리 (필요에 따라 메시지 박스 또는 로그 추가)
                     MessageBox.Show($"오류 발생: {ex.Message}");
-                }
-                
+                }              
             }else if(txt == "중지")
             {
                 //중지 메소드
@@ -167,22 +164,22 @@ namespace VP_QM_winform
         private void UpdateUserName(string userName)
         {
             // lb_userName에 로그인된 사용자 이름 설정
-            Console.WriteLine($"updateUserName 호출: { userName}");
-            btn_popup_login.Text = $"{userName}";
+            Console.WriteLine($"updateUserName 호출: { userName }");
+            btn_popup_login.Text = $"{ userName }";
         }
 
         private async void btn_getLot_Click(object sender, EventArgs e)
         {
             // 비동기 작업의 결과를 기다림
-            var result = await settingJobService.GetLotList();
+            settingJobService.GetLotList();
 
             cb_lot.Items.Clear();
             cb_lot.Items.Add("작업을 선택하세요.");
 
             // 결과를 foreach로 순회
-            foreach (var lot in result)
+            foreach (var lot in Global.s_LotQtyList)
             {
-                cb_lot.Items.Add(lot);
+                cb_lot.Items.Add(lot.Key); // LotVO 객체의 Id 프로퍼티를 추가
             }
 
             cb_lot.SelectedIndex = 0;
@@ -190,11 +187,40 @@ namespace VP_QM_winform
 
         private void btn_choiceLot_Click(object sender, EventArgs e)
         {
-            var lot = cb_lot.Text;
-            Global.s_MenuDTO.LotId = lot;
-            Console.WriteLine($"현재 Lot: { Global.s_MenuDTO.LotId}");
-        }
+            /*
+             *작업 선택 클릭시
+             *1.콤보박스의 로트번호를 불러온다.
+             *2.불러온 로트번호의 앞5자리를 떼어내어 제품명 변수에 입력한다.
+             *3.로트번호와 제품명을 static MenuInfoDTO 변수에 알맞게 대입한다.
+             *4.static MQTTDTO에 MenuInfo와 LoginInfo의 정보를 대입해 MQTT 통신 준비를 한다. 
+             */
+            if (cb_lot.SelectedIndex > 0) // "작업을 선택하세요" 제외
+            {
+                // 1. LotId 및 Qty 가져오기
+                string lotId = cb_lot.SelectedItem.ToString();
+                int qty = Global.s_LotQtyList.FirstOrDefault(lot => lot.Key == lotId).Value;
+                //선택한 로트의 생산갯수 등록
+                Global.s_LotQty = qty;
+                // 2. PartId 생성
+                string partId = lotId.Substring(0, 5);
 
+                // 3. MenuInfoDTO에 데이터 대입
+                Global.s_MenuDTO = new MenuInfoDTO
+                {
+                    LotId = lotId,
+                    PartId = partId
+                };
+
+                Global.s_MQTTDTO = new MQTTDTO
+                {
+                    LotId = lotId,
+                    LineId = Global.s_MenuDTO.LineId,
+                    Shift = Global.s_LoginDTO.Shift,
+                    EmployeeNumber = Global.s_LoginDTO.EmployeeNumber
+                };
+
+            }
+        }
         private void Logout()
         {
             if ((string)ProcessState.GetState("CurrentStage") == "Idle")
@@ -206,6 +232,14 @@ namespace VP_QM_winform
             {
                 MessageBox.Show("장비가 정지된 후 로그아웃 해주세요.");
             }
+        }
+
+        private void btn_finish_Click(object sender, EventArgs e)
+        {
+            /*
+             * 검사왼료 버튼 클릭시
+             * 1. 조건 : List<VisionCumVO> s_VisionCumList 의 길이가 
+             */
         }
     }
 }

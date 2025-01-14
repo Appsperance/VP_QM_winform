@@ -110,7 +110,6 @@
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 71F));
             this.tableLayoutPanel2.Size = new System.Drawing.Size(997, 71);
             this.tableLayoutPanel2.TabIndex = 0;
-            this.tableLayoutPanel2.Paint += new System.Windows.Forms.PaintEventHandler(this.tableLayoutPanel2_Paint);
             // 
             // CorpName
             // 
@@ -290,7 +289,6 @@
             this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel4.Size = new System.Drawing.Size(991, 433);
             this.tableLayoutPanel4.TabIndex = 2;
-            this.tableLayoutPanel4.Paint += new System.Windows.Forms.PaintEventHandler(this.tableLayoutPanel4_Paint);
             // 
             // tableLayoutPanel5
             // 
@@ -396,6 +394,7 @@
             this.btn_finish.TabIndex = 1;
             this.btn_finish.Text = "검사 완료";
             this.btn_finish.UseVisualStyleBackColor = false;
+            this.btn_finish.Click += new System.EventHandler(this.btn_finish_Click);
             // 
             // tableLayoutPanel6
             // 
