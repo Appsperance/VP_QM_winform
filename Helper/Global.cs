@@ -17,7 +17,9 @@ namespace VP_QM_winform.Helper
         public static MQTTDTO s_MQTTDTO { get; set; }
         public static List<KeyValuePair<string, int>> s_LotQtyList {  get; set; }
         public static int s_LotQty { get; set; }
-        
+        public static int s_BadCnt { get; set; } = 0;
+        public static int s_GoodCnt { get; set; } = 0;
+
     }
 
     public class ObservableList<T> : List<T>
