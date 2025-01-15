@@ -4,20 +4,21 @@ using System.IO.Ports;
 using System.Management;
 using System.Threading;
 using System.Threading.Tasks;
+using VP_QM_winform.Service;
 
 namespace VP_QM_winform.Controller
 {
     public class ArduinoController
     {
         private SerialPort serialPort;
-        public string serialReceiveData { set; get; }
+        public string serialReceiveData { set; get; } = "";
         private bool _isConnected; // 연결 상태 플래그
         public bool IsConnected => _isConnected; // 연결 상태를 확인하는 속성
 
         public ArduinoController()
         {
             ConnectToArduinoUno();
-            
+
         }
 
         // 아두이노 연결 설정
@@ -111,6 +112,10 @@ namespace VP_QM_winform.Controller
                         string readData = serialPort.ReadLine();
                         serialReceiveData = readData;
                         Console.WriteLine($"수신: {readData}");
+                    }
+                    else
+                    {
+                        Console.WriteLine($"serialPort is not Open");
                     }
                 }
                 catch

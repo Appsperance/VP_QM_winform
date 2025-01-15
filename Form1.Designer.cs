@@ -59,7 +59,7 @@
             this.label3 = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
             this.picture_state = new System.Windows.Forms.PictureBox();
-            this.dg_inj = new System.Windows.Forms.DataGridView();
+            this.dg_history = new System.Windows.Forms.DataGridView();
             this.tableLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
             this.tableLayoutPanel10.SuspendLayout();
@@ -72,7 +72,7 @@
             this.tableLayoutPanel9.SuspendLayout();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picture_state)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dg_inj)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dg_history)).BeginInit();
             this.SuspendLayout();
             // 
             // tableLayoutPanel1
@@ -471,7 +471,7 @@
             this.tableLayoutPanel7.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel7.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel7.Controls.Add(this.tableLayoutPanel8, 0, 0);
-            this.tableLayoutPanel7.Controls.Add(this.dg_inj, 0, 1);
+            this.tableLayoutPanel7.Controls.Add(this.dg_history, 0, 1);
             this.tableLayoutPanel7.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel7.Location = new System.Drawing.Point(201, 3);
             this.tableLayoutPanel7.Name = "tableLayoutPanel7";
@@ -547,17 +547,20 @@
             this.picture_state.TabIndex = 0;
             this.picture_state.TabStop = false;
             // 
-            // dg_inj
+            // dg_history
             // 
-            this.dg_inj.BackgroundColor = System.Drawing.SystemColors.ActiveBorder;
-            this.dg_inj.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dg_inj.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dg_inj.Location = new System.Drawing.Point(6, 216);
-            this.dg_inj.Margin = new System.Windows.Forms.Padding(6, 3, 9, 3);
-            this.dg_inj.Name = "dg_inj";
-            this.dg_inj.RowTemplate.Height = 23;
-            this.dg_inj.Size = new System.Drawing.Size(573, 208);
-            this.dg_inj.TabIndex = 1;
+            this.dg_history.AllowUserToAddRows = false;
+            this.dg_history.AllowUserToDeleteRows = false;
+            this.dg_history.BackgroundColor = System.Drawing.SystemColors.ActiveBorder;
+            this.dg_history.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dg_history.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dg_history.Location = new System.Drawing.Point(6, 216);
+            this.dg_history.Margin = new System.Windows.Forms.Padding(6, 3, 9, 3);
+            this.dg_history.Name = "dg_history";
+            this.dg_history.ReadOnly = true;
+            this.dg_history.RowTemplate.Height = 23;
+            this.dg_history.Size = new System.Drawing.Size(573, 208);
+            this.dg_history.TabIndex = 1;
             // 
             // Form1
             // 
@@ -584,7 +587,7 @@
             this.tableLayoutPanel9.PerformLayout();
             this.panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.picture_state)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dg_inj)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dg_history)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -605,7 +608,7 @@
         private System.Windows.Forms.Button btn_start;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel6;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel7;
-        private System.Windows.Forms.DataGridView dg_inj;
+        private System.Windows.Forms.DataGridView dg_history;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel8;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel9;
         private System.Windows.Forms.Label label3;

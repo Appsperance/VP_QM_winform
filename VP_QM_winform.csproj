@@ -160,6 +160,9 @@
     <Compile Include="DTO\LoginResDTO.cs" />
     <Compile Include="DTO\LoginReqDTO.cs" />
     <Compile Include="DTO\MenuInfoDTO.cs" />
+    <Compile Include="DTO\VisionHistoryDTO.cs" />
+    <Compile Include="DTO\VisionNgReqDTO.cs" />
+    <Compile Include="DTO\VisionResultDTO.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -184,6 +187,7 @@
     <Compile Include="Service\ProcessState.cs" />
     <Compile Include="Service\SettingJobService.cs" />
     <Compile Include="Service\VisionCumService.cs" />
+    <Compile Include="Service\VisionNgService.cs" />
     <Compile Include="VO\EmployeeVO.cs" />
     <Compile Include="VO\LotVO.cs" />
     <Compile Include="VO\UserVO.cs" />

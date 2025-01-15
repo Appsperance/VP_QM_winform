@@ -1,15 +1,10 @@
 ﻿using OpenCvSharp;
-using OpenCvSharp.Features2D;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using VP_QM_winform.ComManager;
 using VP_QM_winform.Controller;
 using VP_QM_winform.DTO;
-using VP_QM_winform.Service;
 using VP_QM_winform.Helper;
 using VP_QM_winform.VO;
 
@@ -22,45 +17,33 @@ namespace VP_QM_winform.Service
         private readonly VisionController _visionController;
         private readonly MQTTManager _MQTTManager;
         private VisionCumVO _visionCumVO;
+        private VisionHistoryDTO _visionHistoryDTO;
         private VPBusManager _busManager;
+        private VisionNgService _visionNgService;
 
         private CancellationTokenSource _cancellationTokenSource;
 
         
         public ProcessService()
         {
-            string brokerAddress = "43.203.159.137";
-            string username = "admin";
-            string password = "vapor";
-            int port = 1883;
             _arduinoController = new ArduinoController();
-            ProcessState.UpdateState("ArduinoConnected", true);
-            _arduinoController.LampOn("GREEN", onOff: true);
-
             _cameraController = new CameraController();
             ProcessState.UpdateState("CameraConnected", true);
+
             _visionController = new VisionController();
-            _MQTTManager = new MQTTManager(brokerAddress, port, username, password);
+            _MQTTManager = new MQTTManager();
             _busManager = new VPBusManager();
-            _busManager.Connect();
+
+            _cancellationTokenSource = new CancellationTokenSource();
         }
 
-        public async Task RunAsync()
+        public async Task RunAsync(CancellationToken token)
         {
-
             Console.WriteLine("Run 호출");
-
-            MQTTDTO dto = new MQTTDTO
-            {
-                LineId = "Line001",
-                LotId = Global.s_MenuDTO.LotId,
-                Shift = Global.s_LoginDTO.Shift,
-                EmployeeNumber = Global.s_LoginDTO.EmployeeNumber
-            };
-
-            // 새 CancellationTokenSource 생성
-            _cancellationTokenSource = new CancellationTokenSource();
-            CancellationToken token = _cancellationTokenSource.Token;
+            _visionNgService = new VisionNgService();
+            
+            // 작업 중단 가능성을 확인하는 토큰
+            token.ThrowIfCancellationRequested();
 
             // 상태 초기화
             ProcessState.UpdateState("CurrentStage", "waiting");
@@ -68,8 +51,6 @@ namespace VP_QM_winform.Service
 
             try
             {
-               
-
                 // 초기화 대기
                 _arduinoController.StartSerialReadThread();
                 _arduinoController.ResetPosition();
@@ -103,10 +84,10 @@ namespace VP_QM_winform.Service
                         _arduinoController.SendConveyorSpeed(200);
                         Console.WriteLine("물건 투입");
                         //MQTT 전송
-                        dto.StageVal = "100";
+                        Global.s_MQTTDTO.StageVal = "100";
                         try
                         {
-                            await _MQTTManager.PublishMessageAsync(dto);
+                            await _MQTTManager.PublishMessageAsync(Global.s_MQTTDTO);
                         }
                         catch (Exception ex)
                         {
@@ -125,31 +106,68 @@ namespace VP_QM_winform.Service
                         await Task.Delay(2000, token);
 
                         Console.WriteLine("비전 검사 시작");
-                        Mat img = await _cameraController.CaptureAsync(); // 비동기로 캡처
-                        //ProcessImage에서 비전처리된 img를 dto의 NGImg 프로퍼티에 set
-                        await Task.Run(() => _visionController.ProcessImage(img,dto), token); // 비동기로 처리
-
+                        /*
+                         * 비전검사 시작 후
+                         * 1. 카메라 캡쳐
+                         * 2. 비전처리
+                         * 3. MQTT전송 : MQTTDTO
+                         * 4. RestAPI 전송 : VisionNgReqDTO
+                         * 5. VisionHistory에 인덱스 추가
+                         */
+                        //카메라 캡쳐
+                        Mat img = await _cameraController.CaptureAsync();
+                        //비전처리
+                        VisionResultDTO visionResultDTO = new VisionResultDTO();
+                        var imgAndLabel = await Task.Run(() => _visionController.ProcessImage(img, visionResultDTO), token); // 비동기로 처리
+                        //비전 처리된 이미지 MQTTDTO에 할당
+                        Global.s_MQTTDTO.NGImg = imgAndLabel.Img;
+                        
                         var inspectionResult = ProcessState.GetState("InspectionResult");
                         Console.WriteLine($"판독 결과: {inspectionResult}");
                         await Task.Delay(2000, token); // 이미지 처리 대기
 
-
-                        //MQTT 전송
-                        dto.StageVal = "010";
+                        //MQTT에 CurrentStage와 MQTTDTO 전송
+                        Global.s_MQTTDTO.StageVal = "010";
                         try
                         {
-                            await _MQTTManager.PublishMessageAsync(dto);
+                            await _MQTTManager.PublishMessageAsync(Global.s_MQTTDTO);
                         }
                         catch (Exception ex)
                         {
                             Console.WriteLine($"MQTT 메시지 발행 중 오류 발생: {ex.Message}");
                         }
+
+                        //비전 히스토리 객체에 Label값과 검사 시간 넣기
+                        _visionHistoryDTO = new VisionHistoryDTO
+                        {
+                            Label = VisionNgReqDTO.MapLabelToNgType(imgAndLabel.Labels),
+                            EmployeeName = Global.s_LoginDTO?.Name ?? "Unknown"
+                        };
+                        //static List<VisionCumVO> 객체에 add
+                        Global.s_VisionHistoryList.Add(_visionHistoryDTO);
+
+                        //비전 판독 결과가 false인 경우 RestAPI 전송 : VisionNgReqDTO
+                        if ((bool)inspectionResult == false)
+                        {
+                            VisionNgReqDTO dto = new VisionNgReqDTO()
+                            {
+                                LotId = Global.s_MenuDTO.LotId,
+                                LineId = Global.s_MenuDTO.LineId,
+                                DateTime = DateTime.Now,
+                                Img = imgAndLabel.Img,
+                                NgLabel = VisionNgReqDTO.MapLabelToNgType(imgAndLabel.Labels)
+                            };
+                            dto.ToString();
+                            await _visionNgService.InsertVisionNg(dto);
+
+
+                        }
                         // img 초기화
+                        Global.s_MQTTDTO.NGImg = null;
                         img.Dispose();
                         _arduinoController.SendConveyorSpeed(200);
-
-                        
                     }
+
                     // 센서3 이벤트 처리
                     if (_arduinoController.serialReceiveData.Contains("PS_1=ON"))
                     {
@@ -159,28 +177,34 @@ namespace VP_QM_winform.Service
                         Console.WriteLine($"현재 stage: {ProcessState.GetState("CurrentStage")}");
 
                         _arduinoController.serialReceiveData = "";
-                        _visionCumVO = new VisionCumVO()
-                        {
-                            LineId = "vp1",
-                            Time = DateTime.Now,
-                            LotId = Global.s_MenuDTO.LotId,
-                            Shift = Global.s_LoginDTO.Shift,
-                            EmployeeNumber = Global.s_LoginDTO.EmployeeNumber,
-                            Total = Global.s_VisionCumList.Count + 1
-                        };
-                        Global.s_VisionCumList.Add(_visionCumVO);
-                        
-                        // MQTT 메시지 전송
-                        dto.StageVal = "001";
+
+                        // MQTT에 CurrentStage 전송
+                        Global.s_MQTTDTO.StageVal = "001";
                         try
                         {
-                            await _MQTTManager.PublishMessageAsync(dto);
+                            await _MQTTManager.PublishMessageAsync(Global.s_MQTTDTO);
                         }
                         catch (Exception ex)
                         {
                             Console.WriteLine($"MQTT 메시지 발행 중 오류 발생: {ex.Message}");
                         }
 
+                        /*
+                         *VisionCumVO 객체 생성 후
+                         *1.Tcp 소켓서버에 전송
+                         */
+                        
+
+                        _visionCumVO = new VisionCumVO()
+                        {
+                            LineId = Global.s_MenuDTO.LineId,
+                            Time = DateTime.Now,
+                            LotId = Global.s_MenuDTO.LotId,
+                            Shift = Global.s_LoginDTO.Shift,
+                            EmployeeNumber = Global.s_LoginDTO.EmployeeNumber,
+                            Total = Global.s_VisionHistoryList.Count + 1
+                        };
+                        
                         //소켓 서버 전송
                         try
                         {
@@ -190,6 +214,10 @@ namespace VP_QM_winform.Service
                         {
                             Console.WriteLine($"소켓서버 데이터 전송 실패: {ex}");
                         }
+
+                        /*
+                         *
+                         */
 
                         if (!inspectionResult) // 검사 결과가 Bad인 경우
                         {
@@ -273,6 +301,11 @@ namespace VP_QM_winform.Service
                 Console.WriteLine($"작업 중단 중 오류 발생: {ex.Message}");
             }
 
+        }
+
+        public CancellationToken GetCancellationToken()
+        {
+            return _cancellationTokenSource.Token;
         }
     }
 }

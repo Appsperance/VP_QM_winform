@@ -11,18 +11,23 @@ namespace VP_QM_winform.ComManager
 {
     public class MQTTManager
     {
+        private const string _brokerAddress = "43.203.159.137";
+        private const string _username = "admin";
+        private const string _password = "vapor";
+        private const int _port = 1883;
+
         private IMqttClient _mqttClient;
 
         public bool IsConnected => _mqttClient?.IsConnected ?? false;
 
-        public MQTTManager(string brokerAddress, int port, string username, string password)
+        public MQTTManager()
         {
             // 생성자에서 MQTT 클라이언트를 초기화하고 연결
             Task.Run(async () =>
             {
                 try
                 {
-                    await ConnectAsync(brokerAddress, port, username, password);
+                    await ConnectAsync();
                 }
                 catch (Exception ex)
                 {
@@ -31,7 +36,7 @@ namespace VP_QM_winform.ComManager
             }).Wait(); // 비동기 호출을 동기화
         }
 
-        public async Task ConnectAsync(string brokerAddress, int port, string username, string password)
+        public async Task ConnectAsync()
         {
             try
             {
@@ -40,8 +45,8 @@ namespace VP_QM_winform.ComManager
 
                 var options = new MqttClientOptionsBuilder()
                     .WithClientId(Guid.NewGuid().ToString())
-                    .WithTcpServer(brokerAddress, port)
-                    .WithCredentials(username, password)
+                    .WithTcpServer(_brokerAddress, _port)
+                    .WithCredentials(_username, _password)
                     .WithCleanSession()
                     .Build();
 

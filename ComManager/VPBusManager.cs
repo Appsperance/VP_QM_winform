@@ -14,8 +14,13 @@ namespace VP_QM_winform.ComManager
         private TcpClient client;
         private NetworkStream stream;
         //로컬호스트
-        private const string addr = "127.0.0.1";
-        //private const string addr = "13.125.114";
+        //private const string addr = "127.0.0.1";
+        private const string addr = "13.125.114.64";
+
+        public VPBusManager()
+        {
+            Connect();
+        }
         
         public void Connect()
         {

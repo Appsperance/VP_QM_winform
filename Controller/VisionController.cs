@@ -64,7 +64,7 @@ namespace VP_QM_winform.Controller
             return imageArray;
         }
 
-        public void ProcessImage(Mat img, MQTTDTO mqttDTO)
+        public VisionResultDTO ProcessImage(Mat img, VisionResultDTO visionResultDTO)
         {
             // 1. 입력 데이터 준비
             float[] inputData = PreprocessImage(img);
@@ -98,7 +98,7 @@ namespace VP_QM_winform.Controller
                         Console.WriteLine($"output_0 Shape: [{string.Join(", ", outputShape)}]");
 
                         //이미지 후처리
-                        ProcessOutput(outputData, outputShape, img, mqttDTO);
+                        return ProcessOutput(outputData, outputShape, img, visionResultDTO);
                     }
                     catch (Exception ex)
                     {
@@ -106,9 +106,10 @@ namespace VP_QM_winform.Controller
                     }
                 }
             }
+            return null;
         }
 
-        private void ProcessOutput(ReadOnlySpan<float> outputData, IReadOnlyList<long> outputShape, Mat img, MQTTDTO mqttDTO)
+        private VisionResultDTO ProcessOutput(ReadOnlySpan<float> outputData, IReadOnlyList<long> outputShape, Mat img, VisionResultDTO visionResultDTO)
         {
             if (img.Empty())
             {
@@ -168,7 +169,8 @@ namespace VP_QM_winform.Controller
                 int classId = kvp.Key;
                 var (confidence, x1, y1, x2, y2) = kvp.Value;
                 string label = labels[classId];
-                
+                //판독한 라벨 값 DTO에 할당
+                visionResultDTO.Labels.Add(label);
 
                 Console.WriteLine($"Label: {label}, Confidence: {confidence:F4}, BBox: [{x1:F2}, {y1:F2}, {x2:F2}, {y2:F2}]");
 
@@ -196,8 +198,9 @@ namespace VP_QM_winform.Controller
             {
                 Cv2.ImEncode(".png", img, out byte[] imageBytes);
                 memoryStream.Write(imageBytes, 0, imageBytes.Length);
-                mqttDTO.NGImg = memoryStream.ToArray(); // DTO에 이미지 바이트 배열 저장
+                visionResultDTO.Img = memoryStream.ToArray(); // DTO에 이미지 바이트 배열 저장
             }
+            return visionResultDTO;
         }
 
         private int ArgMax(ReadOnlySpan<float> data)

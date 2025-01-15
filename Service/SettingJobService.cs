@@ -13,7 +13,7 @@ namespace VP_QM_winform.Service
 {
     public class SettingJobService
     {
-        public async void GetLotList()
+        public async Task<bool> GetLotList()
         {
             //로컬 서버 주소
             //string apiUri = "https://localhost:7144/api/lots/completed";
@@ -36,6 +36,7 @@ namespace VP_QM_winform.Service
                     {
                         Console.WriteLine($"LotId: {item.Key}, Qty: {item.Value}");
                     }
+                    return true;
 
                 }
             }
@@ -43,6 +44,7 @@ namespace VP_QM_winform.Service
             {
                 Console.WriteLine(ex.Message);
             }
+            return false;
         }   
     }
 }

@@ -23,7 +23,7 @@ namespace VP_QM_winform
             process  = new ProcessService();
             settingJobService = new SettingJobService();
             
-            formController = new FormController(picture_state,dg_inj);
+            formController = new FormController(picture_state,dg_history);
             formController.UpdatePictureBoxImage(ProcessState.GetState("CurrentStage").ToString());
             // 상태 변경 이벤트 등록
             ProcessState.StateChanged += OnStateChanged;
@@ -51,6 +51,20 @@ namespace VP_QM_winform
             timer.Interval = 1000; // 1초(1000ms)
             timer.Tick += (sender, e) => UpdateCurrentTime();
             timer.Start();
+
+            //데이터그리드 생성
+            // 컬럼 자동 생성
+            formController.InitializeDataGridView();
+            // ObservableList 변경 이벤트 구독
+            ((ObservableList<VisionHistoryDTO>)Global.s_VisionHistoryList).ListChanged += () =>
+            {
+                formController.RefreshDataGridView();
+            };
+        }
+        private void OnVisionHistoryUpdated()
+        {
+            // 데이터가 갱신될 때 호출
+            formController.RefreshDataGridView();
         }
 
 
@@ -82,6 +96,7 @@ namespace VP_QM_winform
             lb_currentTime.Text = currentTime;
         }
 
+        private bool _isRunning = false; // 작업 상태 관리 변수
         private async void btn_start_Click(object sender, EventArgs e)
         {
             /*
@@ -104,7 +119,7 @@ namespace VP_QM_winform
                     btn_start.FlatAppearance.BorderColor = System.Drawing.Color.Magenta;
                     Global.s_MenuDTO.Start = DateTime.Now;
                     // 백그라운드 작업 시작
-                    await Task.Run(() => process.RunAsync());
+                    await Task.Run(() => process.RunAsync(process.GetCancellationToken()));
                 }
                 catch (Exception ex)
                 {
@@ -113,12 +128,11 @@ namespace VP_QM_winform
                 }              
             }else if(txt == "중지")
             {
-                //중지 메소드
-                process.Stop();
-
                 btn_start.Text = "시작";
                 btn_start.BackColor = System.Drawing.Color.ForestGreen;
                 btn_start.FlatAppearance.BorderColor = System.Drawing.Color.Lime;
+                //중지 메소드
+                process.Stop();
             }
         }
 
@@ -171,7 +185,7 @@ namespace VP_QM_winform
         private async void btn_getLot_Click(object sender, EventArgs e)
         {
             // 비동기 작업의 결과를 기다림
-            settingJobService.GetLotList();
+            bool result =  await settingJobService.GetLotList();
 
             cb_lot.Items.Clear();
             cb_lot.Items.Add("작업을 선택하세요.");
@@ -218,7 +232,6 @@ namespace VP_QM_winform
                     Shift = Global.s_LoginDTO.Shift,
                     EmployeeNumber = Global.s_LoginDTO.EmployeeNumber
                 };
-
             }
         }
         private void Logout()
