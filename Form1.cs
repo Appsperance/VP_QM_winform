@@ -15,8 +15,8 @@ namespace VP_QM_winform
         private ProcessService process;
         private SettingJobService settingJobService;
         private FormController formController;
-        private ChartController processChartController;
-        private ChartController ngChartController;
+        public static ChartController processChartController;
+        public static ChartController ngChartController;
         public Form1()
         {
             InitializeComponent();
@@ -32,16 +32,11 @@ namespace VP_QM_winform
             processChartController = new ChartController(process_panel);
             ngChartController = new ChartController(ng_panel);
 
-            // 임시 데이터 설정
-            int totalInspections = 100;   // 총 검사 수량
-            int currentInspections = 50;  // 현재 검사 수량
-            int defectiveCount = 10;      // 불량 수량
-
             // 프로세스 차트 데이터 설정
-            processChartController.UpdateChart(totalInspections, currentInspections, defectiveCount, "Progress"); // 불량 데이터는 0으로 설정
+            processChartController.UpdateChart(Global.s_LotQty,(Global.s_BadCnt + Global.s_GoodCnt) , Global.s_BadCnt, "Progress"); // 불량 데이터는 0으로 설정
 
             // 불량률 차트 데이터 설정
-            ngChartController.UpdateChart(totalInspections, currentInspections, defectiveCount, "Defect");
+            ngChartController.UpdateChart(Global.s_LotQty, (Global.s_BadCnt + Global.s_GoodCnt), Global.s_BadCnt, "Defect");
 
             // Form 로드 시 현재 시간 표시
             UpdateCurrentTime();

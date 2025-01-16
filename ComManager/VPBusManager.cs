@@ -81,10 +81,10 @@ namespace VP_QM_winform.ComManager
         {
             // 데이터 변환
             byte[] lineIdBytes = Encoding.ASCII.GetBytes(visionCumVO.LineId.PadRight(4, '\0')); // LineId (4바이트)
-            byte[] timeBytes = BitConverter.GetBytes(new DateTimeOffset(visionCumVO.Time).ToUnixTimeSeconds());
+            byte[] timeBytes = BitConverter.GetBytes(new DateTimeOffset(visionCumVO.Time).ToUnixTimeMilliseconds());
             byte[] lotIdBytes = Encoding.ASCII.GetBytes(visionCumVO.LotId.PadRight(20, '\0')); // LotId (20바이트)
             byte[] shiftBytes = Encoding.ASCII.GetBytes(visionCumVO.Shift.PadRight(4, '\0')); // Shift (4바이트)
-            byte[] employeeNumberBytes = BitConverter.GetBytes((long)visionCumVO.EmployeeNumber); // EmployeeNumber (10바이트)
+            byte[] employeeNumberBytes = BitConverter.GetBytes((long)visionCumVO.EmployeeNumber); // EmployeeNumber (4바이트)
             byte[] totalBytes = BitConverter.GetBytes(visionCumVO.Total); // Total (4바이트)
 
             // 페이로드 생성
@@ -94,7 +94,7 @@ namespace VP_QM_winform.ComManager
             Buffer.BlockCopy(lotIdBytes, 0, payload, 12, lotIdBytes.Length);
             Buffer.BlockCopy(shiftBytes, 0, payload, 32, shiftBytes.Length);
             Buffer.BlockCopy(employeeNumberBytes, 0, payload, 36, employeeNumberBytes.Length);
-            Buffer.BlockCopy(totalBytes, 0, payload, 46, totalBytes.Length);
+            Buffer.BlockCopy(totalBytes, 0, payload, 40, totalBytes.Length);
 
             // 헤더 생성
             byte frameType = 2; // JWT = 1, CUM = 2

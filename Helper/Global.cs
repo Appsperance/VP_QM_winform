@@ -13,13 +13,75 @@ namespace VP_QM_winform.Helper
     {
         public static ObservableList<VisionHistoryDTO> s_VisionHistoryList { get; set; } = new ObservableList<VisionHistoryDTO>();
         public static LoginInfoDTO s_LoginDTO { get; set; }
-        public static MenuInfoDTO s_MenuDTO { get; set; }
+        public static MenuInfoDTO s_MenuDTO { get; set; } = new MenuInfoDTO();
         public static MQTTDTO s_MQTTDTO { get; set; }
         public static List<KeyValuePair<string, int>> s_LotQtyList {  get; set; }
-        public static int s_LotQty { get; set; }
-        public static int s_BadCnt { get; set; } = 0;
-        public static int s_GoodCnt { get; set; } = 0;
+        private static int _s_LotQty = 1;
+        private static int _s_BadCnt = 0;
+        private static int _s_GoodCnt = 0;
+        public static int s_LotQty
+        {
+            get => _s_LotQty;
+            set
+            {
+                if (_s_LotQty != value)
+                {
+                    _s_LotQty = value;
+                    UpdateCharts();
+                }
+            }
+        }
 
+        public static int s_BadCnt
+        {
+            get => _s_BadCnt;
+            set
+            {
+                if (_s_BadCnt != value)
+                {
+                    _s_BadCnt = value;
+                    UpdateCharts();
+                }
+            }
+        }
+        public static int s_GoodCnt
+        {
+            get => _s_GoodCnt;
+            set
+            {
+                if (_s_GoodCnt != value)
+                {
+                    _s_GoodCnt = value;
+                    UpdateCharts();
+                }
+            }
+        }
+
+
+
+        // 차트 업데이트 메서드
+        private static void UpdateCharts()
+        {
+            if (Form1.processChartController != null)
+            {
+                Form1.processChartController.UpdateChart(
+                    s_LotQty,
+                    (Global.s_BadCnt + Global.s_GoodCnt),
+                    s_BadCnt,
+                    "Progress"
+                );
+            }
+
+            if (Form1.ngChartController != null)
+            {
+                Form1.ngChartController.UpdateChart(
+                    s_LotQty,
+                    (Global.s_BadCnt + Global.s_GoodCnt),
+                    s_BadCnt,
+                    "Defect"
+                );
+            }
+        }
     }
 
     public class ObservableList<T> : List<T>
@@ -56,4 +118,5 @@ namespace VP_QM_winform.Helper
             }
         }
     }
+
 }

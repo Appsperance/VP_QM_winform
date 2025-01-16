@@ -11,7 +11,7 @@ namespace VP_QM_winform.DTO
         public string LineId { get; set; } = "vi01";
         public string PartId { get; set; }
         public string LotId { get; set; }
-        public DateTime Start { get; set; }
+        public DateTime Start { get; set; } 
         public DateTime End { get; set; }
 
     }

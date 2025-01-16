@@ -202,7 +202,7 @@ namespace VP_QM_winform.Service
                             LotId = Global.s_MenuDTO.LotId,
                             Shift = Global.s_LoginDTO.Shift,
                             EmployeeNumber = Global.s_LoginDTO.EmployeeNumber,
-                            Total = Global.s_VisionHistoryList.Count + 1
+                            Total = Global.s_VisionHistoryList.Count
                         };
                         
                         //소켓 서버 전송
