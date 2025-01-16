@@ -115,6 +115,8 @@ namespace VP_QM_winform.ComManager
             Buffer.BlockCopy(header, 0, message, 0, header.Length);
             Buffer.BlockCopy(payload, 0, message, header.Length, payload.Length);
 
+            Console.WriteLine($"#########Millisecond : {new DateTimeOffset(visionCumVO.Time).ToUnixTimeMilliseconds()}");
+
             return message;
         }
 
