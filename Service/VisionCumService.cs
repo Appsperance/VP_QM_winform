@@ -18,16 +18,6 @@ namespace VP_QM_winform.Service
         //로컬에서 가지고있을 로트별 누적 검사 현황
         
 
-        public void InsertVision(VisionCumVO visionCumVO)
-        {
-            visionCumDAO = new VisionCumDAO();
-            
-            int result = visionCumDAO.InsertVisionCum(visionCumVO);
-            if ((result != 0))
-            {
-                Global.s_VisionCumList.Add(visionCumVO);
-            }
-
-        }
+      
     }
 }

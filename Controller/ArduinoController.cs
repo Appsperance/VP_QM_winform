@@ -4,20 +4,21 @@ using System.IO.Ports;
 using System.Management;
 using System.Threading;
 using System.Threading.Tasks;
+using VP_QM_winform.Service;
 
 namespace VP_QM_winform.Controller
 {
     public class ArduinoController
     {
         private SerialPort serialPort;
-        public string serialReceiveData { set; get; }
+        public string serialReceiveData { set; get; } = "";
         private bool _isConnected; // 연결 상태 플래그
         public bool IsConnected => _isConnected; // 연결 상태를 확인하는 속성
 
         public ArduinoController()
         {
             ConnectToArduinoUno();
-            
+            StartSerialReadThread();
         }
 
         // 아두이노 연결 설정
@@ -78,17 +79,46 @@ namespace VP_QM_winform.Controller
             return portDescriptions.ToArray();
         }
 
-        public void CloseConnection()
+        public async Task CloseConnectionAsync()
         {
-            if (serialPort != null && serialPort.IsOpen)
+            try
             {
-                serialPort.Close();
-                Console.WriteLine("시리얼 포트 닫힘");
+                if (serialPort != null)
+                {
+                    if (serialPort.IsOpen)
+                    {
+                        serialPort.Close();
+                        Console.WriteLine("✅ 시리얼 포트 닫힘");
+                    }
+                    serialPort.Dispose(); // 💡 포트 리소스 해제
+                }
             }
-            _isConnected = false;
+            catch (UnauthorizedAccessException ex)
+            {
+                Console.WriteLine($"⚠️ 시리얼 포트 닫기 중 액세스 거부 오류 발생: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"⚠️ 시리얼 포트 닫기 중 예외 발생: {ex.Message}");
+            }
+            finally
+            {
+                _isConnected = false;
+                serialPort = null; // 💡 메모리에서 완전히 해제
+
+                // ✅ Windows가 포트를 완전히 해제할 시간을 주기 위해 딜레이 추가 (비동기)
+                await Task.Delay(500);
+
+                // ✅ 가비지 컬렉션을 실행하여 해제되지 않은 포트가 즉시 정리되도록 유도
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+            }
         }
 
+
+
         // 아두이노 데이터 읽기 쓰레드
+        // 아두이노 데이터 읽기 쓰레드 시작
         public void StartSerialReadThread()
         {
             if (!IsConnected)
@@ -111,6 +141,11 @@ namespace VP_QM_winform.Controller
                         string readData = serialPort.ReadLine();
                         serialReceiveData = readData;
                         Console.WriteLine($"수신: {readData}");
+                    }
+                    else
+                    {
+                        Console.WriteLine($"serialPort is not Open");
+                        break;
                     }
                 }
                 catch

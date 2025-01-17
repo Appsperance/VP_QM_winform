@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using VP_QM_winform.DTO;
+using VP_QM_winform.Helper;
 using VP_QM_winform.Service;
 
 namespace VP_QM_winform.Controller
@@ -64,7 +65,7 @@ namespace VP_QM_winform.Controller
             return imageArray;
         }
 
-        public void ProcessImage(Mat img, MQTTDTO mqttDTO)
+        public VisionResultDTO ProcessImage(Mat img, VisionResultDTO visionResultDTO)
         {
             // 1. 입력 데이터 준비
             float[] inputData = PreprocessImage(img);
@@ -98,7 +99,7 @@ namespace VP_QM_winform.Controller
                         Console.WriteLine($"output_0 Shape: [{string.Join(", ", outputShape)}]");
 
                         //이미지 후처리
-                        ProcessOutput(outputData, outputShape, img, mqttDTO);
+                        return ProcessOutput(outputData, outputShape, img, visionResultDTO);
                     }
                     catch (Exception ex)
                     {
@@ -106,9 +107,10 @@ namespace VP_QM_winform.Controller
                     }
                 }
             }
+            return null;
         }
 
-        private void ProcessOutput(ReadOnlySpan<float> outputData, IReadOnlyList<long> outputShape, Mat img, MQTTDTO mqttDTO)
+        private VisionResultDTO ProcessOutput(ReadOnlySpan<float> outputData, IReadOnlyList<long> outputShape, Mat img, VisionResultDTO visionResultDTO)
         {
             if (img.Empty())
             {
@@ -161,27 +163,34 @@ namespace VP_QM_winform.Controller
             {
                 // bestBoxes가 비어 있을 경우 양품으로 판정
                 ProcessState.State["InspectionResult"] = true;
+                Global.s_GoodCnt++;
             }
-
-            foreach (var kvp in bestBoxes)
+            else
             {
-                int classId = kvp.Key;
-                var (confidence, x1, y1, x2, y2) = kvp.Value;
-                string label = labels[classId];
-                
+                foreach (var kvp in bestBoxes)
+                {
+                    int classId = kvp.Key;
+                    var (confidence, x1, y1, x2, y2) = kvp.Value;
+                    string label = labels[classId];
+                    //판독한 라벨 값 DTO에 할당
+                    visionResultDTO.Labels.Add(label);
 
-                Console.WriteLine($"Label: {label}, Confidence: {confidence:F4}, BBox: [{x1:F2}, {y1:F2}, {x2:F2}, {y2:F2}]");
+                    Console.WriteLine($"Label: {label}, Confidence: {confidence:F4}, BBox: [{x1:F2}, {y1:F2}, {x2:F2}, {y2:F2}]");
 
-                Point topLeft = new Point((int)x1, (int)y1);
-                Point bottomRight = new Point((int)x2, (int)y2);
-                Scalar color = label == "good" ? new Scalar(0, 255, 0) : new Scalar(0, 0, 255);
+                    Point topLeft = new Point((int)x1, (int)y1);
+                    Point bottomRight = new Point((int)x2, (int)y2);
+                    Scalar color = label == "good" ? new Scalar(0, 255, 0) : new Scalar(0, 0, 255);
 
-                Cv2.Rectangle(img, topLeft, bottomRight, color, 2);
-                string displayText = $"{label}: {confidence:F2}";
-                Cv2.PutText(img, displayText, new Point((int)x1, (int)y1 - 10), HersheyFonts.HersheySimplex, 0.5, color, 1);
+                    Cv2.Rectangle(img, topLeft, bottomRight, color, 2);
+                    string displayText = $"{label}: {confidence:F2}";
+                    Cv2.PutText(img, displayText, new Point((int)x1, (int)y1 - 10), HersheyFonts.HersheySimplex, 0.5, color, 1);
+                }
                 //상태 업데이트
                 ProcessState.UpdateState("InspectionResult",false);
+                Global.s_BadCnt++;
+
             }
+
 
             //지정 디렉토리에 결과 값 저장
             string outputDir = @"C:\VP_Vision\processed";
@@ -196,8 +205,9 @@ namespace VP_QM_winform.Controller
             {
                 Cv2.ImEncode(".png", img, out byte[] imageBytes);
                 memoryStream.Write(imageBytes, 0, imageBytes.Length);
-                mqttDTO.NGImg = memoryStream.ToArray(); // DTO에 이미지 바이트 배열 저장
+                visionResultDTO.Img = memoryStream.ToArray(); // DTO에 이미지 바이트 배열 저장
             }
+            return visionResultDTO;
         }
 
         private int ArgMax(ReadOnlySpan<float> data)

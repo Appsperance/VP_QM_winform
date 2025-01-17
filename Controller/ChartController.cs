@@ -59,7 +59,7 @@ namespace VP_QM_winform.Controller
             }
             else if (currentMode == "Defect") // 불량률
             {
-                percentage = currentInspections > 0 ? (float)defectiveCount / currentInspections * 100 : 0;
+                percentage = currentInspections > 0 ? (float)defectiveCount / totalInspections * 100 : 0;
                 fillColor = Color.FromArgb(252, 7, 117);
             }
             float sweepAngle = percentage / 100 * 360;

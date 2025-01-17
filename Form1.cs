@@ -5,6 +5,9 @@ using VP_QM_winform.Service;
 using VP_QM_winform.Controller;
 using VP_QM_winform.Helper;
 using VP_QM_winform.VO;
+using VP_QM_winform.DTO;
+using System.Linq;
+using System.Threading;
 
 namespace VP_QM_winform
 {
@@ -13,15 +16,20 @@ namespace VP_QM_winform
         private ProcessService process;
         private SettingJobService settingJobService;
         private FormController formController;
-        private ChartController processChartController;
-        private ChartController ngChartController;
+        private Task _messageTask;
+        public static ChartController processChartController;
+        public static ChartController ngChartController;
+        private CancellationTokenSource _cts;
+
         public Form1()
         {
             InitializeComponent();
-            process  = new ProcessService();
+            
             settingJobService = new SettingJobService();
             
-            formController = new FormController(picture_state,dg_inj);
+            
+
+            formController = new FormController(picture_state, dg_history);
             formController.UpdatePictureBoxImage(ProcessState.GetState("CurrentStage").ToString());
             // 상태 변경 이벤트 등록
             ProcessState.StateChanged += OnStateChanged;
@@ -30,25 +38,60 @@ namespace VP_QM_winform
             processChartController = new ChartController(process_panel);
             ngChartController = new ChartController(ng_panel);
 
-            // 임시 데이터 설정
-            int totalInspections = 100;   // 총 검사 수량
-            int currentInspections = 50;  // 현재 검사 수량
-            int defectiveCount = 10;      // 불량 수량
-
             // 프로세스 차트 데이터 설정
-            processChartController.UpdateChart(totalInspections, currentInspections, defectiveCount, "Progress"); // 불량 데이터는 0으로 설정
+            processChartController.UpdateChart(Global.s_LotQty, (Global.s_BadCnt + Global.s_GoodCnt), Global.s_BadCnt, "Progress"); // 불량 데이터는 0으로 설정
 
             // 불량률 차트 데이터 설정
-            ngChartController.UpdateChart(totalInspections, currentInspections, defectiveCount, "Defect");
+            ngChartController.UpdateChart(Global.s_LotQty, (Global.s_BadCnt + Global.s_GoodCnt), Global.s_BadCnt, "Defect");
 
             // Form 로드 시 현재 시간 표시
             UpdateCurrentTime();
 
             // Timer 설정: 매초마다 업데이트
-            Timer timer = new Timer();
+            System.Windows.Forms.Timer timer = new System.Windows.Forms.Timer();
             timer.Interval = 1000; // 1초(1000ms)
             timer.Tick += (sender, e) => UpdateCurrentTime();
             timer.Start();
+
+            //데이터그리드 생성
+            // 컬럼 자동 생성
+            formController.InitializeDataGridView();
+            // ObservableList 변경 이벤트 구독
+            ((ObservableList<VisionHistoryDTO>)Global.s_VisionHistoryList).ListChanged += () =>
+            {
+                formController.RefreshDataGridView();
+            };
+
+            // Menu 초기 값 라벨에 매핑
+            InitializeMenuLabels();
+
+            //Menu 이벤트 핸들러
+            MenuInfoDTO.LineIdChanged += (value) => lb_lineId.Text = value;
+            MenuInfoDTO.PartIdChanged += (value) => lb_partId.Text = value;
+            MenuInfoDTO.LotIdChanged += (value) => lb_lot.Text = value;
+            MenuInfoDTO.StartChanged += (value) => lb_startTime.Text = value.ToString("yyyy-MM-dd HH:mm:ss");
+            MenuInfoDTO.EndChanged += (value) => lb_endTime.Text = value.ToString("yyyy-MM-dd HH:mm:ss");
+
+        }
+
+        // Menu 초기 값을 라벨에 매핑하는 메서드
+        private void InitializeMenuLabels()
+        {
+            lb_lineId.Text = MenuInfoDTO.LineId;
+            lb_partId.Text = MenuInfoDTO.PartId ?? "-"; // null일 경우 기본값 설정
+            lb_lot.Text = MenuInfoDTO.LotId ?? "-";
+            lb_startTime.Text = MenuInfoDTO.Start != DateTime.MinValue
+                ? MenuInfoDTO.Start.ToString("yyyy-MM-dd HH:mm:ss")
+                : "-";
+            lb_endTime.Text = MenuInfoDTO.End != DateTime.MinValue
+                ? MenuInfoDTO.End.ToString("yyyy-MM-dd HH:mm:ss")
+                : "-";
+        }
+
+        private void OnVisionHistoryUpdated()
+        {
+            // 데이터가 갱신될 때 호출
+            formController.RefreshDataGridView();
         }
 
 
@@ -80,48 +123,57 @@ namespace VP_QM_winform
             lb_currentTime.Text = currentTime;
         }
 
-        private void tableLayoutPanel4_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
-
-        private void tableLayoutPanel2_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
-
-        private void label1_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private async void btn_start_Click(object sender, EventArgs e)
         {
-            string txt = btn_start.Text;
-            if(txt == "시작")
+            if (StateDTO.IsJobSelected)
             {
-                try
+                _cts = new CancellationTokenSource();
+                var cancellationToken = _cts.Token;
+                /*
+                 * 시작/중지 토글 버튼 클릭시
+                 * 시작인 경우
+                 * 1. 중지 버튼으로 바꾼다.
+                 * 2. Run메소드를 실행한다.
+                 * 3. static MenuInfoDTO변수의 start에 현재 시간정보를 입력한다.
+                 * 중지인 경우
+                 * 1. 시작 버튼으로 바꾼다.
+                 * 2. Run메소드를 중지한다.
+                 */
+                string txt = btn_start.Text;
+                if(txt == "시작")
                 {
-                    btn_start.Text = "중지";
-                    btn_start.BackColor = System.Drawing.Color.Red;
-                    btn_start.FlatAppearance.BorderColor = System.Drawing.Color.Magenta;
-                    // 백그라운드 작업 시작
-                    await Task.Run(() => process.RunAsync());
-                }
-                catch (Exception ex)
+                    try
+                    {
+                        btn_start.Text = "중지";
+                        btn_start.BackColor = System.Drawing.Color.Red;
+                      
+                        StateDTO.IsStarted = true;
+                        StateDTO.IsProcessing = true;
+                        MenuInfoDTO.Start = DateTime.Now;
+                        // 백그라운드 작업 시작
+                        await process.RunAsync(cancellationToken);
+                        
+                    }
+                    catch (Exception ex)
+                    {
+                        // 예외 처리 (필요에 따라 메시지 박스 또는 로그 추가)
+                        MessageBox.Show($"오류 발생: {ex.Message}");
+                    }              
+                }else if(txt == "중지")
                 {
-                    // 예외 처리 (필요에 따라 메시지 박스 또는 로그 추가)
-                    MessageBox.Show($"오류 발생: {ex.Message}");
-                }
-                
-            }else if(txt == "중지")
-            {
-                //중지 메소드
-                process.Stop();
+                    Console.WriteLine("중지버튼 클릭 ");
+                    btn_start.Text = "시작";
+                    btn_start.BackColor = System.Drawing.Color.FromArgb(25, 44, 90);
 
-                btn_start.Text = "시작";
-                btn_start.BackColor = System.Drawing.Color.ForestGreen;
-                btn_start.FlatAppearance.BorderColor = System.Drawing.Color.Lime;
+                    //중지 메소드
+                    ProcessService.mytoken = false;
+                    StateDTO.IsProcessing = false;
+                }
+
+            }
+            else
+            {
+                MessageBox.Show("작업을 선택하세요.");
             }
         }
 
@@ -167,34 +219,92 @@ namespace VP_QM_winform
         private void UpdateUserName(string userName)
         {
             // lb_userName에 로그인된 사용자 이름 설정
-            Console.WriteLine($"updateUserName 호출: { userName}");
-            btn_popup_login.Text = $"{userName}";
+            Console.WriteLine($"updateUserName 호출: { userName }");
+            btn_popup_login.Text = $"{ userName }";
         }
 
         private async void btn_getLot_Click(object sender, EventArgs e)
         {
-            // 비동기 작업의 결과를 기다림
-            var result = await settingJobService.GetLotList();
-
-            cb_lot.Items.Clear();
-            cb_lot.Items.Add("작업을 선택하세요.");
-
-            // 결과를 foreach로 순회
-            foreach (var lot in result)
+            if (StateDTO.IsLogined)
             {
-                cb_lot.Items.Add(lot);
-            }
+                // 비동기 작업의 결과를 기다림
+                bool result =  await settingJobService.GetLotList();
 
-            cb_lot.SelectedIndex = 0;
+                cb_lot.Items.Clear();
+                cb_lot.Items.Add("작업을 선택하세요.");
+
+                // 결과를 foreach로 순회
+                foreach (var lot in Global.s_LotQtyList)
+                {
+                    cb_lot.Items.Add(lot.Key); // LotVO 객체의 Id 프로퍼티를 추가
+                }
+
+                cb_lot.SelectedIndex = 0;
+                StateDTO.IsJobChecked = true;
+            }
+            else
+            {
+                MessageBox.Show("로그인이 필요합니다.");
+            }
         }
 
         private void btn_choiceLot_Click(object sender, EventArgs e)
         {
-            var lot = cb_lot.Text;
-            Global.s_MenuDTO.LotId = lot;
-            Console.WriteLine($"현재 Lot: { Global.s_MenuDTO.LotId}");
-        }
+            bool isNull;
+            //작업을 선택하세요는 null로 취급
+            if(cb_lot.Text == "작업을 선택하세요.")
+            {
+                isNull = true;
+            }
+            else
+            {
+                isNull = false;
+            }
+            if (StateDTO.IsJobChecked && !isNull)
+            {
+                process = new ProcessService();
+                /*
+                 *작업 선택 클릭시
+                 *1.콤보박스의 로트번호를 불러온다.
+                 *2.불러온 로트번호의 앞5자리를 떼어내어 제품명 변수에 입력한다.
+                 *3.로트번호와 제품명을 static MenuInfoDTO 변수에 알맞게 대입한다.
+                 *4.static MQTTDTO에 MenuInfo와 LoginInfo의 정보를 대입해 MQTT 통신 준비를 한다. 
+                 */
+                if (cb_lot.SelectedIndex > 0) // "작업을 선택하세요" 제외
+                {
+                    // 1. LotId 및 Qty 가져오기
+                    string lotId = cb_lot.SelectedItem.ToString();
+                    int qty = Global.s_LotQtyList.FirstOrDefault(lot => lot.Key == lotId).Value;
+                    //선택한 로트의 생산갯수 등록
+                    Global.s_LotQty = qty;
+                    // 2. PartId 생성
+                    string partId = lotId.Substring(0, 5);
 
+                    // 3. MenuInfoDTO에 데이터 대입
+
+                    MenuInfoDTO.LotId = lotId;
+                    MenuInfoDTO.PartId = partId;
+                
+
+                    Global.s_MQTTDTO = new MQTTDTO
+                    {
+                        LotId = lotId,
+                        LineId = MenuInfoDTO.LineId,
+                        Shift = Global.s_LoginDTO.Shift,
+                        EmployeeNumber = Global.s_LoginDTO.EmployeeNumber
+                    };
+
+                    StateDTO.IsJobSelected = true;
+                    lb_startTime.Text = "-";
+                    lb_endTime.Text = "-";
+                }
+
+            }
+            else
+            {
+                MessageBox.Show("작업을 조회하세요.");
+            }
+        }
         private void Logout()
         {
             if ((string)ProcessState.GetState("CurrentStage") == "Idle")
@@ -205,6 +315,26 @@ namespace VP_QM_winform
             else
             {
                 MessageBox.Show("장비가 정지된 후 로그아웃 해주세요.");
+            }
+        }
+
+        private void btn_finish_Click(object sender, EventArgs e)
+        {
+            if (StateDTO.IsStarted && !StateDTO.IsProcessing)
+            { 
+                process.Stop();
+                StateDTO.IsJobSelected = false;
+                StateDTO.IsStarted = false;
+                MessageBox.Show("작업이 완료되었습니다.");
+                MenuInfoDTO.End = DateTime.Now;
+            }
+            else if (StateDTO.IsStarted && StateDTO.IsProcessing)
+            {
+                MessageBox.Show("장비가 정지해야 합니다.");
+            }
+            else if(!StateDTO.IsStarted)
+            {
+                MessageBox.Show("작업이 시작되지 않았습니다.");
             }
         }
     }

@@ -12,19 +12,7 @@ namespace VP_QM_winform.DTO
         public string LotId { get; set; }
         public string Shift { get; set; }
         public int EmployeeNumber {  get; set; }
-        private byte[] _ngImg;
-        public byte[] NGImg
-        {
-            get => _ngImg;
-            set
-            {
-                _ngImg = value;
-                if (_ngImg != null)
-                {
-                    Console.WriteLine($"NGImg has been set. Length: {_ngImg.Length} bytes");
-                }
-            }
-        }
+        public byte[] NGImg { get; set; }
         public string StageVal { get; set; }
 
     }
