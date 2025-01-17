@@ -160,6 +160,7 @@
     <Compile Include="DTO\LoginResDTO.cs" />
     <Compile Include="DTO\LoginReqDTO.cs" />
     <Compile Include="DTO\MenuInfoDTO.cs" />
+    <Compile Include="DTO\StateDTO.cs" />
     <Compile Include="DTO\VisionHistoryDTO.cs" />
     <Compile Include="DTO\VisionNgReqDTO.cs" />
     <Compile Include="DTO\VisionResultDTO.cs" />

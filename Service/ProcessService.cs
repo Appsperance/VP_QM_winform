@@ -36,8 +36,6 @@ namespace VP_QM_winform.Service
             _visionController = new VisionController();
             _MQTTManager = new MQTTManager();
             _busManager = new VPBusManager();
-
-            _cancellationTokenSource = new CancellationTokenSource();
         }
 
         public async Task RunAsync(CancellationToken token)
@@ -285,7 +283,7 @@ namespace VP_QM_winform.Service
             try
             {
                 Console.WriteLine("작업 중단 요청");
-                _arduinoController.CloseConnection();
+                await _arduinoController.CloseConnectionAsync();
 
             }
             catch (Exception ex)

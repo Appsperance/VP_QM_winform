@@ -54,6 +54,7 @@ namespace VP_QM_winform
                 await loginService.Login(loginReqDTO);
                 if (Global.s_LoginDTO != null)
                 {
+                    StateDTO.IsLogined = true;
                     // 로그인 성공 이벤트 호출
                     LoginSuccess?.Invoke(Global.s_LoginDTO.Name); // 사용자 이름 전달
                     this.Close(); // 로그인 창 닫기

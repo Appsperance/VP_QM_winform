@@ -60,8 +60,6 @@
             this.process_panel = new System.Windows.Forms.Panel();
             this.tableLayoutPanel7 = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel8 = new System.Windows.Forms.TableLayoutPanel();
-            this.tableLayoutPanel9 = new System.Windows.Forms.TableLayoutPanel();
-            this.label3 = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
             this.picture_state = new System.Windows.Forms.PictureBox();
             this.dg_history = new System.Windows.Forms.DataGridView();
@@ -74,7 +72,6 @@
             this.tableLayoutPanel6.SuspendLayout();
             this.tableLayoutPanel7.SuspendLayout();
             this.tableLayoutPanel8.SuspendLayout();
-            this.tableLayoutPanel9.SuspendLayout();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picture_state)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dg_history)).BeginInit();
@@ -100,7 +97,7 @@
             // 
             // tableLayoutPanel2
             // 
-            this.tableLayoutPanel2.BackColor = System.Drawing.Color.Navy;
+            this.tableLayoutPanel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(44)))), ((int)(((byte)(90)))));
             this.tableLayoutPanel2.ColumnCount = 2;
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
@@ -131,6 +128,7 @@
             // 
             // tableLayoutPanel10
             // 
+            this.tableLayoutPanel10.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(44)))), ((int)(((byte)(90)))));
             this.tableLayoutPanel10.ColumnCount = 1;
             this.tableLayoutPanel10.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel10.Controls.Add(this.btn_popup_login, 0, 0);
@@ -145,7 +143,7 @@
             // 
             // btn_popup_login
             // 
-            this.btn_popup_login.BackColor = System.Drawing.Color.Navy;
+            this.btn_popup_login.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(44)))), ((int)(((byte)(90)))));
             this.btn_popup_login.Dock = System.Windows.Forms.DockStyle.Right;
             this.btn_popup_login.FlatAppearance.BorderSize = 0;
             this.btn_popup_login.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -162,7 +160,7 @@
             // 
             // tableLayoutPanel3
             // 
-            this.tableLayoutPanel3.BackColor = System.Drawing.Color.Black;
+            this.tableLayoutPanel3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(69)))), ((int)(((byte)(90)))), ((int)(((byte)(113)))));
             this.tableLayoutPanel3.ColumnCount = 6;
             this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 15F));
             this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 15F));
@@ -195,6 +193,7 @@
             // lb_endTime
             // 
             this.lb_endTime.AutoSize = true;
+            this.lb_endTime.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(69)))), ((int)(((byte)(90)))), ((int)(((byte)(113)))));
             this.lb_endTime.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lb_endTime.ForeColor = System.Drawing.SystemColors.Control;
             this.lb_endTime.Location = new System.Drawing.Point(649, 43);
@@ -207,6 +206,7 @@
             // lb_startTime
             // 
             this.lb_startTime.AutoSize = true;
+            this.lb_startTime.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(69)))), ((int)(((byte)(90)))), ((int)(((byte)(113)))));
             this.lb_startTime.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lb_startTime.ForeColor = System.Drawing.SystemColors.Control;
             this.lb_startTime.Location = new System.Drawing.Point(450, 43);
@@ -219,6 +219,7 @@
             // lb_lot
             // 
             this.lb_lot.AutoSize = true;
+            this.lb_lot.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(69)))), ((int)(((byte)(90)))), ((int)(((byte)(113)))));
             this.lb_lot.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lb_lot.ForeColor = System.Drawing.SystemColors.Control;
             this.lb_lot.Location = new System.Drawing.Point(301, 43);
@@ -231,6 +232,7 @@
             // lb_partId
             // 
             this.lb_partId.AutoSize = true;
+            this.lb_partId.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(69)))), ((int)(((byte)(90)))), ((int)(((byte)(113)))));
             this.lb_partId.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lb_partId.ForeColor = System.Drawing.SystemColors.Control;
             this.lb_partId.Location = new System.Drawing.Point(152, 43);
@@ -243,6 +245,7 @@
             // lb_workerId
             // 
             this.lb_workerId.AutoSize = true;
+            this.lb_workerId.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(69)))), ((int)(((byte)(90)))), ((int)(((byte)(113)))));
             this.lb_workerId.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lb_workerId.Font = new System.Drawing.Font("나눔고딕", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
             this.lb_workerId.ForeColor = System.Drawing.Color.White;
@@ -256,6 +259,7 @@
             // lb_end
             // 
             this.lb_end.AutoSize = true;
+            this.lb_end.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(69)))), ((int)(((byte)(90)))), ((int)(((byte)(113)))));
             this.lb_end.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lb_end.Font = new System.Drawing.Font("나눔고딕", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
             this.lb_end.ForeColor = System.Drawing.Color.White;
@@ -269,6 +273,7 @@
             // lb_start
             // 
             this.lb_start.AutoSize = true;
+            this.lb_start.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(69)))), ((int)(((byte)(90)))), ((int)(((byte)(113)))));
             this.lb_start.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lb_start.Font = new System.Drawing.Font("나눔고딕", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
             this.lb_start.ForeColor = System.Drawing.Color.White;
@@ -282,6 +287,7 @@
             // lb_lotId
             // 
             this.lb_lotId.AutoSize = true;
+            this.lb_lotId.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(69)))), ((int)(((byte)(90)))), ((int)(((byte)(113)))));
             this.lb_lotId.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lb_lotId.Font = new System.Drawing.Font("나눔고딕", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
             this.lb_lotId.ForeColor = System.Drawing.Color.White;
@@ -295,6 +301,7 @@
             // lb_productId
             // 
             this.lb_productId.AutoSize = true;
+            this.lb_productId.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(69)))), ((int)(((byte)(90)))), ((int)(((byte)(113)))));
             this.lb_productId.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lb_productId.Font = new System.Drawing.Font("나눔고딕", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
             this.lb_productId.ForeColor = System.Drawing.Color.White;
@@ -308,6 +315,7 @@
             // lb_machineId
             // 
             this.lb_machineId.AutoSize = true;
+            this.lb_machineId.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(69)))), ((int)(((byte)(90)))), ((int)(((byte)(113)))));
             this.lb_machineId.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lb_machineId.Font = new System.Drawing.Font("나눔고딕", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
             this.lb_machineId.ForeColor = System.Drawing.Color.White;
@@ -321,6 +329,7 @@
             // lb_currentTime
             // 
             this.lb_currentTime.AutoSize = true;
+            this.lb_currentTime.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(69)))), ((int)(((byte)(90)))), ((int)(((byte)(113)))));
             this.lb_currentTime.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lb_currentTime.Font = new System.Drawing.Font("굴림", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
             this.lb_currentTime.ForeColor = System.Drawing.Color.WhiteSmoke;
@@ -333,6 +342,7 @@
             // lb_lineId
             // 
             this.lb_lineId.AutoSize = true;
+            this.lb_lineId.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(69)))), ((int)(((byte)(90)))), ((int)(((byte)(113)))));
             this.lb_lineId.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lb_lineId.ForeColor = System.Drawing.SystemColors.Control;
             this.lb_lineId.Location = new System.Drawing.Point(3, 43);
@@ -362,7 +372,7 @@
             // 
             // tableLayoutPanel5
             // 
-            this.tableLayoutPanel5.BackColor = System.Drawing.Color.Black;
+            this.tableLayoutPanel5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(69)))), ((int)(((byte)(90)))), ((int)(((byte)(113)))));
             this.tableLayoutPanel5.ColumnCount = 1;
             this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel5.Controls.Add(this.btn_start, 0, 4);
@@ -386,9 +396,9 @@
             // 
             // btn_start
             // 
-            this.btn_start.BackColor = System.Drawing.Color.ForestGreen;
+            this.btn_start.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(44)))), ((int)(((byte)(90)))));
             this.btn_start.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.btn_start.FlatAppearance.BorderColor = System.Drawing.Color.Lime;
+            this.btn_start.FlatAppearance.BorderColor = System.Drawing.Color.White;
             this.btn_start.FlatAppearance.BorderSize = 2;
             this.btn_start.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btn_start.Font = new System.Drawing.Font("나눔고딕", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
@@ -416,9 +426,9 @@
             // 
             // btn_choiceLot
             // 
-            this.btn_choiceLot.BackColor = System.Drawing.Color.DarkBlue;
+            this.btn_choiceLot.BackColor = System.Drawing.Color.Gray;
             this.btn_choiceLot.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.btn_choiceLot.FlatAppearance.BorderColor = System.Drawing.Color.RoyalBlue;
+            this.btn_choiceLot.FlatAppearance.BorderColor = System.Drawing.Color.White;
             this.btn_choiceLot.FlatAppearance.BorderSize = 2;
             this.btn_choiceLot.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btn_choiceLot.Font = new System.Drawing.Font("나눔고딕", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
@@ -433,7 +443,7 @@
             // 
             // btn_getLot
             // 
-            this.btn_getLot.BackColor = System.Drawing.Color.Black;
+            this.btn_getLot.BackColor = System.Drawing.Color.Gray;
             this.btn_getLot.Dock = System.Windows.Forms.DockStyle.Fill;
             this.btn_getLot.FlatAppearance.BorderColor = System.Drawing.Color.WhiteSmoke;
             this.btn_getLot.FlatAppearance.BorderSize = 2;
@@ -450,9 +460,9 @@
             // 
             // btn_finish
             // 
-            this.btn_finish.BackColor = System.Drawing.Color.Navy;
+            this.btn_finish.BackColor = System.Drawing.Color.Gray;
             this.btn_finish.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.btn_finish.FlatAppearance.BorderColor = System.Drawing.Color.RoyalBlue;
+            this.btn_finish.FlatAppearance.BorderColor = System.Drawing.Color.White;
             this.btn_finish.FlatAppearance.BorderSize = 2;
             this.btn_finish.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btn_finish.Font = new System.Drawing.Font("나눔고딕", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
@@ -468,7 +478,7 @@
             // 
             // tableLayoutPanel6
             // 
-            this.tableLayoutPanel6.BackColor = System.Drawing.Color.Black;
+            this.tableLayoutPanel6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(69)))), ((int)(((byte)(90)))), ((int)(((byte)(113)))));
             this.tableLayoutPanel6.ColumnCount = 1;
             this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel6.Controls.Add(this.label2, 0, 2);
@@ -489,7 +499,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.BackColor = System.Drawing.Color.Black;
+            this.label2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(69)))), ((int)(((byte)(90)))), ((int)(((byte)(113)))));
             this.label2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.label2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.label2.Font = new System.Drawing.Font("나눔고딕", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
@@ -504,7 +514,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.BackColor = System.Drawing.Color.Black;
+            this.label1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(69)))), ((int)(((byte)(90)))), ((int)(((byte)(113)))));
             this.label1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.label1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.label1.Font = new System.Drawing.Font("나눔고딕", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
@@ -536,66 +546,36 @@
             // 
             // tableLayoutPanel7
             // 
-            this.tableLayoutPanel7.BackColor = System.Drawing.Color.Black;
+            this.tableLayoutPanel7.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(69)))), ((int)(((byte)(90)))), ((int)(((byte)(113)))));
             this.tableLayoutPanel7.ColumnCount = 1;
             this.tableLayoutPanel7.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel7.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel7.Controls.Add(this.tableLayoutPanel8, 0, 0);
             this.tableLayoutPanel7.Controls.Add(this.dg_history, 0, 1);
             this.tableLayoutPanel7.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel7.Location = new System.Drawing.Point(201, 3);
+            this.tableLayoutPanel7.Location = new System.Drawing.Point(198, 3);
+            this.tableLayoutPanel7.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
             this.tableLayoutPanel7.Name = "tableLayoutPanel7";
             this.tableLayoutPanel7.RowCount = 2;
             this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel7.Size = new System.Drawing.Size(588, 427);
+            this.tableLayoutPanel7.Size = new System.Drawing.Size(594, 427);
             this.tableLayoutPanel7.TabIndex = 2;
             // 
             // tableLayoutPanel8
             // 
-            this.tableLayoutPanel8.ColumnCount = 2;
-            this.tableLayoutPanel8.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 70F));
-            this.tableLayoutPanel8.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 30F));
-            this.tableLayoutPanel8.Controls.Add(this.tableLayoutPanel9, 1, 0);
+            this.tableLayoutPanel8.ColumnCount = 1;
+            this.tableLayoutPanel8.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel8.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel8.Controls.Add(this.panel2, 0, 0);
             this.tableLayoutPanel8.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel8.Location = new System.Drawing.Point(3, 3);
             this.tableLayoutPanel8.Name = "tableLayoutPanel8";
             this.tableLayoutPanel8.RowCount = 1;
             this.tableLayoutPanel8.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel8.Size = new System.Drawing.Size(582, 207);
+            this.tableLayoutPanel8.Size = new System.Drawing.Size(588, 207);
             this.tableLayoutPanel8.TabIndex = 0;
-            // 
-            // tableLayoutPanel9
-            // 
-            this.tableLayoutPanel9.ColumnCount = 1;
-            this.tableLayoutPanel9.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel9.Controls.Add(this.label3, 0, 0);
-            this.tableLayoutPanel9.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel9.Location = new System.Drawing.Point(410, 3);
-            this.tableLayoutPanel9.Name = "tableLayoutPanel9";
-            this.tableLayoutPanel9.RowCount = 3;
-            this.tableLayoutPanel9.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20F));
-            this.tableLayoutPanel9.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 40F));
-            this.tableLayoutPanel9.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 40F));
-            this.tableLayoutPanel9.Size = new System.Drawing.Size(169, 201);
-            this.tableLayoutPanel9.TabIndex = 0;
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.BackColor = System.Drawing.Color.Black;
-            this.label3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label3.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.label3.Font = new System.Drawing.Font("나눔고딕", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.label3.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.label3.Location = new System.Drawing.Point(3, 0);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(163, 40);
-            this.label3.TabIndex = 0;
-            this.label3.Text = "투입 가능";
-            this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // panel2
             // 
@@ -604,16 +584,16 @@
             this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel2.Location = new System.Drawing.Point(3, 3);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(401, 201);
+            this.panel2.Size = new System.Drawing.Size(582, 201);
             this.panel2.TabIndex = 1;
             // 
             // picture_state
             // 
-            this.picture_state.BackColor = System.Drawing.Color.Transparent;
+            this.picture_state.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(69)))), ((int)(((byte)(90)))), ((int)(((byte)(113)))));
             this.picture_state.Dock = System.Windows.Forms.DockStyle.Fill;
             this.picture_state.Location = new System.Drawing.Point(0, 0);
             this.picture_state.Name = "picture_state";
-            this.picture_state.Size = new System.Drawing.Size(399, 199);
+            this.picture_state.Size = new System.Drawing.Size(580, 199);
             this.picture_state.TabIndex = 0;
             this.picture_state.TabStop = false;
             // 
@@ -625,18 +605,18 @@
             this.dg_history.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dg_history.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dg_history.Location = new System.Drawing.Point(6, 216);
-            this.dg_history.Margin = new System.Windows.Forms.Padding(6, 3, 9, 3);
+            this.dg_history.Margin = new System.Windows.Forms.Padding(6, 3, 6, 3);
             this.dg_history.Name = "dg_history";
             this.dg_history.ReadOnly = true;
             this.dg_history.RowTemplate.Height = 23;
-            this.dg_history.Size = new System.Drawing.Size(573, 208);
+            this.dg_history.Size = new System.Drawing.Size(582, 208);
             this.dg_history.TabIndex = 1;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(65)))), ((int)(((byte)(176)))), ((int)(((byte)(158)))));
+            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(69)))), ((int)(((byte)(90)))), ((int)(((byte)(113)))));
             this.ClientSize = new System.Drawing.Size(997, 599);
             this.Controls.Add(this.tableLayoutPanel1);
             this.Name = "Form1";
@@ -653,8 +633,6 @@
             this.tableLayoutPanel6.PerformLayout();
             this.tableLayoutPanel7.ResumeLayout(false);
             this.tableLayoutPanel8.ResumeLayout(false);
-            this.tableLayoutPanel9.ResumeLayout(false);
-            this.tableLayoutPanel9.PerformLayout();
             this.panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.picture_state)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dg_history)).EndInit();
@@ -680,8 +658,6 @@
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel7;
         private System.Windows.Forms.DataGridView dg_history;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel8;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel9;
-        private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Button btn_finish;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Panel ng_panel;

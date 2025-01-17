@@ -24,7 +24,7 @@ namespace VP_QM_winform
         public Form1()
         {
             InitializeComponent();
-            process = new ProcessService();
+            
             settingJobService = new SettingJobService();
             
             
@@ -123,46 +123,57 @@ namespace VP_QM_winform
             lb_currentTime.Text = currentTime;
         }
 
-        //private bool _isRunning = false; // 작업 상태 관리 변수
         private async void btn_start_Click(object sender, EventArgs e)
         {
-            _cts = new CancellationTokenSource();
-            var cancellationToken = _cts.Token;
-            /*
-             * 시작/중지 토글 버튼 클릭시
-             * 시작인 경우
-             * 1. 중지 버튼으로 바꾼다.
-             * 2. Run메소드를 실행한다.
-             * 3. static MenuInfoDTO변수의 start에 현재 시간정보를 입력한다.
-             * 중지인 경우
-             * 1. 시작 버튼으로 바꾼다.
-             * 2. Run메소드를 중지한다.
-             */
-            string txt = btn_start.Text;
-            if(txt == "시작")
+            if (StateDTO.IsJobSelected)
             {
-                try
+                _cts = new CancellationTokenSource();
+                var cancellationToken = _cts.Token;
+                /*
+                 * 시작/중지 토글 버튼 클릭시
+                 * 시작인 경우
+                 * 1. 중지 버튼으로 바꾼다.
+                 * 2. Run메소드를 실행한다.
+                 * 3. static MenuInfoDTO변수의 start에 현재 시간정보를 입력한다.
+                 * 중지인 경우
+                 * 1. 시작 버튼으로 바꾼다.
+                 * 2. Run메소드를 중지한다.
+                 */
+                string txt = btn_start.Text;
+                if(txt == "시작")
                 {
-                    btn_start.Text = "중지";
-                    btn_start.BackColor = System.Drawing.Color.Red;
-                    btn_start.FlatAppearance.BorderColor = System.Drawing.Color.Magenta;
-                    MenuInfoDTO.Start = DateTime.Now;
-                    // 백그라운드 작업 시작
-                    await process.RunAsync(cancellationToken);
+                    try
+                    {
+                        btn_start.Text = "중지";
+                        btn_start.BackColor = System.Drawing.Color.Red;
+                      
+                        StateDTO.IsStarted = true;
+                        StateDTO.IsProcessing = true;
+                        MenuInfoDTO.Start = DateTime.Now;
+                        // 백그라운드 작업 시작
+                        await process.RunAsync(cancellationToken);
+                        
+                    }
+                    catch (Exception ex)
+                    {
+                        // 예외 처리 (필요에 따라 메시지 박스 또는 로그 추가)
+                        MessageBox.Show($"오류 발생: {ex.Message}");
+                    }              
+                }else if(txt == "중지")
+                {
+                    Console.WriteLine("중지버튼 클릭 ");
+                    btn_start.Text = "시작";
+                    btn_start.BackColor = System.Drawing.Color.FromArgb(25, 44, 90);
+
+                    //중지 메소드
+                    ProcessService.mytoken = false;
+                    StateDTO.IsProcessing = false;
                 }
-                catch (Exception ex)
-                {
-                    // 예외 처리 (필요에 따라 메시지 박스 또는 로그 추가)
-                    MessageBox.Show($"오류 발생: {ex.Message}");
-                }              
-            }else if(txt == "중지")
+
+            }
+            else
             {
-                btn_start.Text = "시작";
-                btn_start.BackColor = System.Drawing.Color.ForestGreen;
-                btn_start.FlatAppearance.BorderColor = System.Drawing.Color.Lime;
-                //중지 메소드
-                ProcessService.mytoken = false;
-                Console.WriteLine("중지버튼 클릭 ");
+                MessageBox.Show("작업을 선택하세요.");
             }
         }
 
@@ -214,53 +225,84 @@ namespace VP_QM_winform
 
         private async void btn_getLot_Click(object sender, EventArgs e)
         {
-            // 비동기 작업의 결과를 기다림
-            bool result =  await settingJobService.GetLotList();
-
-            cb_lot.Items.Clear();
-            cb_lot.Items.Add("작업을 선택하세요.");
-
-            // 결과를 foreach로 순회
-            foreach (var lot in Global.s_LotQtyList)
+            if (StateDTO.IsLogined)
             {
-                cb_lot.Items.Add(lot.Key); // LotVO 객체의 Id 프로퍼티를 추가
-            }
+                // 비동기 작업의 결과를 기다림
+                bool result =  await settingJobService.GetLotList();
 
-            cb_lot.SelectedIndex = 0;
+                cb_lot.Items.Clear();
+                cb_lot.Items.Add("작업을 선택하세요.");
+
+                // 결과를 foreach로 순회
+                foreach (var lot in Global.s_LotQtyList)
+                {
+                    cb_lot.Items.Add(lot.Key); // LotVO 객체의 Id 프로퍼티를 추가
+                }
+
+                cb_lot.SelectedIndex = 0;
+                StateDTO.IsJobChecked = true;
+            }
+            else
+            {
+                MessageBox.Show("로그인이 필요합니다.");
+            }
         }
 
         private void btn_choiceLot_Click(object sender, EventArgs e)
         {
-            /*
-             *작업 선택 클릭시
-             *1.콤보박스의 로트번호를 불러온다.
-             *2.불러온 로트번호의 앞5자리를 떼어내어 제품명 변수에 입력한다.
-             *3.로트번호와 제품명을 static MenuInfoDTO 변수에 알맞게 대입한다.
-             *4.static MQTTDTO에 MenuInfo와 LoginInfo의 정보를 대입해 MQTT 통신 준비를 한다. 
-             */
-            if (cb_lot.SelectedIndex > 0) // "작업을 선택하세요" 제외
+            bool isNull;
+            //작업을 선택하세요는 null로 취급
+            if(cb_lot.Text == "작업을 선택하세요.")
             {
-                // 1. LotId 및 Qty 가져오기
-                string lotId = cb_lot.SelectedItem.ToString();
-                int qty = Global.s_LotQtyList.FirstOrDefault(lot => lot.Key == lotId).Value;
-                //선택한 로트의 생산갯수 등록
-                Global.s_LotQty = qty;
-                // 2. PartId 생성
-                string partId = lotId.Substring(0, 5);
+                isNull = true;
+            }
+            else
+            {
+                isNull = false;
+            }
+            if (StateDTO.IsJobChecked && !isNull)
+            {
+                process = new ProcessService();
+                /*
+                 *작업 선택 클릭시
+                 *1.콤보박스의 로트번호를 불러온다.
+                 *2.불러온 로트번호의 앞5자리를 떼어내어 제품명 변수에 입력한다.
+                 *3.로트번호와 제품명을 static MenuInfoDTO 변수에 알맞게 대입한다.
+                 *4.static MQTTDTO에 MenuInfo와 LoginInfo의 정보를 대입해 MQTT 통신 준비를 한다. 
+                 */
+                if (cb_lot.SelectedIndex > 0) // "작업을 선택하세요" 제외
+                {
+                    // 1. LotId 및 Qty 가져오기
+                    string lotId = cb_lot.SelectedItem.ToString();
+                    int qty = Global.s_LotQtyList.FirstOrDefault(lot => lot.Key == lotId).Value;
+                    //선택한 로트의 생산갯수 등록
+                    Global.s_LotQty = qty;
+                    // 2. PartId 생성
+                    string partId = lotId.Substring(0, 5);
 
-                // 3. MenuInfoDTO에 데이터 대입
+                    // 3. MenuInfoDTO에 데이터 대입
 
-                MenuInfoDTO.LotId = lotId;
-                MenuInfoDTO.PartId = partId;
+                    MenuInfoDTO.LotId = lotId;
+                    MenuInfoDTO.PartId = partId;
                 
 
-                Global.s_MQTTDTO = new MQTTDTO
-                {
-                    LotId = lotId,
-                    LineId = MenuInfoDTO.LineId,
-                    Shift = Global.s_LoginDTO.Shift,
-                    EmployeeNumber = Global.s_LoginDTO.EmployeeNumber
-                };
+                    Global.s_MQTTDTO = new MQTTDTO
+                    {
+                        LotId = lotId,
+                        LineId = MenuInfoDTO.LineId,
+                        Shift = Global.s_LoginDTO.Shift,
+                        EmployeeNumber = Global.s_LoginDTO.EmployeeNumber
+                    };
+
+                    StateDTO.IsJobSelected = true;
+                    lb_startTime.Text = "-";
+                    lb_endTime.Text = "-";
+                }
+
+            }
+            else
+            {
+                MessageBox.Show("작업을 조회하세요.");
             }
         }
         private void Logout()
@@ -278,10 +320,22 @@ namespace VP_QM_winform
 
         private void btn_finish_Click(object sender, EventArgs e)
         {
-            /*
-             * 검사왼료 버튼 클릭시
-             * 1. 조건 : List<VisionCumVO> s_VisionCumList 의 길이가 
-             */
+            if (StateDTO.IsStarted && !StateDTO.IsProcessing)
+            { 
+                process.Stop();
+                StateDTO.IsJobSelected = false;
+                StateDTO.IsStarted = false;
+                MessageBox.Show("작업이 완료되었습니다.");
+                MenuInfoDTO.End = DateTime.Now;
+            }
+            else if (StateDTO.IsStarted && StateDTO.IsProcessing)
+            {
+                MessageBox.Show("장비가 정지해야 합니다.");
+            }
+            else if(!StateDTO.IsStarted)
+            {
+                MessageBox.Show("작업이 시작되지 않았습니다.");
+            }
         }
     }
 }
