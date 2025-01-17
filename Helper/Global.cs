@@ -13,7 +13,6 @@ namespace VP_QM_winform.Helper
     {
         public static ObservableList<VisionHistoryDTO> s_VisionHistoryList { get; set; } = new ObservableList<VisionHistoryDTO>();
         public static LoginInfoDTO s_LoginDTO { get; set; }
-        public static MenuInfoDTO s_MenuDTO { get; set; } = new MenuInfoDTO();
         public static MQTTDTO s_MQTTDTO { get; set; }
         public static List<KeyValuePair<string, int>> s_LotQtyList {  get; set; }
         private static int _s_LotQty = 1;

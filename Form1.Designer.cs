@@ -34,6 +34,10 @@
             this.tableLayoutPanel10 = new System.Windows.Forms.TableLayoutPanel();
             this.btn_popup_login = new System.Windows.Forms.Button();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
+            this.lb_endTime = new System.Windows.Forms.Label();
+            this.lb_startTime = new System.Windows.Forms.Label();
+            this.lb_lot = new System.Windows.Forms.Label();
+            this.lb_partId = new System.Windows.Forms.Label();
             this.lb_workerId = new System.Windows.Forms.Label();
             this.lb_end = new System.Windows.Forms.Label();
             this.lb_start = new System.Windows.Forms.Label();
@@ -41,6 +45,7 @@
             this.lb_productId = new System.Windows.Forms.Label();
             this.lb_machineId = new System.Windows.Forms.Label();
             this.lb_currentTime = new System.Windows.Forms.Label();
+            this.lb_lineId = new System.Windows.Forms.Label();
             this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel5 = new System.Windows.Forms.TableLayoutPanel();
             this.btn_start = new System.Windows.Forms.Button();
@@ -165,6 +170,10 @@
             this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
             this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
             this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 15F));
+            this.tableLayoutPanel3.Controls.Add(this.lb_endTime, 4, 1);
+            this.tableLayoutPanel3.Controls.Add(this.lb_startTime, 3, 1);
+            this.tableLayoutPanel3.Controls.Add(this.lb_lot, 2, 1);
+            this.tableLayoutPanel3.Controls.Add(this.lb_partId, 1, 1);
             this.tableLayoutPanel3.Controls.Add(this.lb_workerId, 5, 0);
             this.tableLayoutPanel3.Controls.Add(this.lb_end, 4, 0);
             this.tableLayoutPanel3.Controls.Add(this.lb_start, 3, 0);
@@ -172,6 +181,7 @@
             this.tableLayoutPanel3.Controls.Add(this.lb_productId, 1, 0);
             this.tableLayoutPanel3.Controls.Add(this.lb_machineId, 0, 0);
             this.tableLayoutPanel3.Controls.Add(this.lb_currentTime, 5, 1);
+            this.tableLayoutPanel3.Controls.Add(this.lb_lineId, 0, 1);
             this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel3.Location = new System.Drawing.Point(0, 74);
             this.tableLayoutPanel3.Margin = new System.Windows.Forms.Padding(0, 3, 0, 0);
@@ -181,6 +191,54 @@
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel3.Size = new System.Drawing.Size(997, 86);
             this.tableLayoutPanel3.TabIndex = 1;
+            // 
+            // lb_endTime
+            // 
+            this.lb_endTime.AutoSize = true;
+            this.lb_endTime.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lb_endTime.ForeColor = System.Drawing.SystemColors.Control;
+            this.lb_endTime.Location = new System.Drawing.Point(649, 43);
+            this.lb_endTime.Name = "lb_endTime";
+            this.lb_endTime.Size = new System.Drawing.Size(193, 43);
+            this.lb_endTime.TabIndex = 12;
+            this.lb_endTime.Text = "label8";
+            this.lb_endTime.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // lb_startTime
+            // 
+            this.lb_startTime.AutoSize = true;
+            this.lb_startTime.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lb_startTime.ForeColor = System.Drawing.SystemColors.Control;
+            this.lb_startTime.Location = new System.Drawing.Point(450, 43);
+            this.lb_startTime.Name = "lb_startTime";
+            this.lb_startTime.Size = new System.Drawing.Size(193, 43);
+            this.lb_startTime.TabIndex = 11;
+            this.lb_startTime.Text = "label7";
+            this.lb_startTime.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // lb_lot
+            // 
+            this.lb_lot.AutoSize = true;
+            this.lb_lot.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lb_lot.ForeColor = System.Drawing.SystemColors.Control;
+            this.lb_lot.Location = new System.Drawing.Point(301, 43);
+            this.lb_lot.Name = "lb_lot";
+            this.lb_lot.Size = new System.Drawing.Size(143, 43);
+            this.lb_lot.TabIndex = 10;
+            this.lb_lot.Text = "label6";
+            this.lb_lot.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // lb_partId
+            // 
+            this.lb_partId.AutoSize = true;
+            this.lb_partId.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lb_partId.ForeColor = System.Drawing.SystemColors.Control;
+            this.lb_partId.Location = new System.Drawing.Point(152, 43);
+            this.lb_partId.Name = "lb_partId";
+            this.lb_partId.Size = new System.Drawing.Size(143, 43);
+            this.lb_partId.TabIndex = 9;
+            this.lb_partId.Text = "label5";
+            this.lb_partId.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // lb_workerId
             // 
@@ -271,6 +329,18 @@
             this.lb_currentTime.Size = new System.Drawing.Size(146, 43);
             this.lb_currentTime.TabIndex = 7;
             this.lb_currentTime.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // lb_lineId
+            // 
+            this.lb_lineId.AutoSize = true;
+            this.lb_lineId.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lb_lineId.ForeColor = System.Drawing.SystemColors.Control;
+            this.lb_lineId.Location = new System.Drawing.Point(3, 43);
+            this.lb_lineId.Name = "lb_lineId";
+            this.lb_lineId.Size = new System.Drawing.Size(143, 43);
+            this.lb_lineId.TabIndex = 8;
+            this.lb_lineId.Text = "label4";
+            this.lb_lineId.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // tableLayoutPanel4
             // 
@@ -625,6 +695,11 @@
         private System.Windows.Forms.Button btn_getLot;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label lb_endTime;
+        private System.Windows.Forms.Label lb_startTime;
+        private System.Windows.Forms.Label lb_lot;
+        private System.Windows.Forms.Label lb_partId;
+        private System.Windows.Forms.Label lb_lineId;
     }
 }
 

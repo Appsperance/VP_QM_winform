@@ -14,11 +14,13 @@ namespace VP_QM_winform.Controller
         public string serialReceiveData { set; get; } = "";
         private bool _isConnected; // 연결 상태 플래그
         public bool IsConnected => _isConnected; // 연결 상태를 확인하는 속성
+        public Thread _receiveThread;
+        private bool _isReading = false;
 
         public ArduinoController()
         {
             ConnectToArduinoUno();
-
+            StartSerialReadThread();
         }
 
         // 아두이노 연결 설정
@@ -81,15 +83,42 @@ namespace VP_QM_winform.Controller
 
         public void CloseConnection()
         {
-            if (serialPort != null && serialPort.IsOpen)
+            try
             {
-                serialPort.Close();
-                Console.WriteLine("시리얼 포트 닫힘");
+                if (serialPort != null)
+                {
+                    if (serialPort.IsOpen)
+                    {
+                        serialPort.Close();
+                        Console.WriteLine("✅ 시리얼 포트 닫힘");
+                    }
+                    serialPort.Dispose(); // 💡 포트 리소스 해제
+                }
             }
-            _isConnected = false;
+            catch (UnauthorizedAccessException ex)
+            {
+                Console.WriteLine($"⚠️ 시리얼 포트 닫기 중 액세스 거부 오류 발생: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"⚠️ 시리얼 포트 닫기 중 예외 발생: {ex.Message}");
+            }
+            finally
+            {
+                _isConnected = false;
+                serialPort = null; // 💡 메모리에서 완전히 해제
+
+                // ✅ Windows가 포트를 완전히 해제할 시간을 주기 위해 딜레이 추가
+                Task.Delay(500).Wait();
+
+                // ✅ 가비지 컬렉션을 실행하여 해제되지 않은 포트가 즉시 정리되도록 유도
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+            }
         }
 
         // 아두이노 데이터 읽기 쓰레드
+        // 아두이노 데이터 읽기 쓰레드 시작
         public void StartSerialReadThread()
         {
             if (!IsConnected)
@@ -124,6 +153,30 @@ namespace VP_QM_winform.Controller
                 }
             }
         }
+        // 아두이노 데이터 읽기 쓰레드 정리 및 시리얼 포트 닫기
+        public void StopSerialReadThread()
+        {
+            if (_receiveThread != null && _receiveThread.IsAlive)
+            {
+                Console.WriteLine("시리얼 읽기 쓰레드를 중지합니다.");
+                _isReading = false; // ✅ 읽기 루프 중단 신호
+
+                if (!_receiveThread.Join(500)) // ✅ 500ms 동안 종료 대기
+                {
+                    Console.WriteLine("쓰레드가 즉시 종료되지 않아 강제 종료를 시도합니다.");
+                    _receiveThread.Interrupt(); // ✅ 강제 인터럽트
+                }
+
+                _receiveThread = null; // ✅ 쓰레드 객체 해제
+            }
+
+            if (serialPort != null && serialPort.IsOpen)
+            {
+                Console.WriteLine("시리얼 포트를 닫습니다.");
+                serialPort.Close(); // ✅ 시리얼 포트 닫기
+            }
+        }
+
 
         public void SendConveyorSpeed(int speed)
         {

@@ -7,6 +7,7 @@ using VP_QM_winform.Helper;
 using VP_QM_winform.VO;
 using VP_QM_winform.DTO;
 using System.Linq;
+using System.Threading;
 
 namespace VP_QM_winform
 {
@@ -15,15 +16,20 @@ namespace VP_QM_winform
         private ProcessService process;
         private SettingJobService settingJobService;
         private FormController formController;
+        private Task _messageTask;
         public static ChartController processChartController;
         public static ChartController ngChartController;
+        private CancellationTokenSource _cts;
+
         public Form1()
         {
             InitializeComponent();
-            process  = new ProcessService();
+            process = new ProcessService();
             settingJobService = new SettingJobService();
             
-            formController = new FormController(picture_state,dg_history);
+            
+
+            formController = new FormController(picture_state, dg_history);
             formController.UpdatePictureBoxImage(ProcessState.GetState("CurrentStage").ToString());
             // 상태 변경 이벤트 등록
             ProcessState.StateChanged += OnStateChanged;
@@ -33,7 +39,7 @@ namespace VP_QM_winform
             ngChartController = new ChartController(ng_panel);
 
             // 프로세스 차트 데이터 설정
-            processChartController.UpdateChart(Global.s_LotQty,(Global.s_BadCnt + Global.s_GoodCnt) , Global.s_BadCnt, "Progress"); // 불량 데이터는 0으로 설정
+            processChartController.UpdateChart(Global.s_LotQty, (Global.s_BadCnt + Global.s_GoodCnt), Global.s_BadCnt, "Progress"); // 불량 데이터는 0으로 설정
 
             // 불량률 차트 데이터 설정
             ngChartController.UpdateChart(Global.s_LotQty, (Global.s_BadCnt + Global.s_GoodCnt), Global.s_BadCnt, "Defect");
@@ -42,7 +48,7 @@ namespace VP_QM_winform
             UpdateCurrentTime();
 
             // Timer 설정: 매초마다 업데이트
-            Timer timer = new Timer();
+            System.Windows.Forms.Timer timer = new System.Windows.Forms.Timer();
             timer.Interval = 1000; // 1초(1000ms)
             timer.Tick += (sender, e) => UpdateCurrentTime();
             timer.Start();
@@ -55,7 +61,33 @@ namespace VP_QM_winform
             {
                 formController.RefreshDataGridView();
             };
+
+            // Menu 초기 값 라벨에 매핑
+            InitializeMenuLabels();
+
+            //Menu 이벤트 핸들러
+            MenuInfoDTO.LineIdChanged += (value) => lb_lineId.Text = value;
+            MenuInfoDTO.PartIdChanged += (value) => lb_partId.Text = value;
+            MenuInfoDTO.LotIdChanged += (value) => lb_lot.Text = value;
+            MenuInfoDTO.StartChanged += (value) => lb_startTime.Text = value.ToString("yyyy-MM-dd HH:mm:ss");
+            MenuInfoDTO.EndChanged += (value) => lb_endTime.Text = value.ToString("yyyy-MM-dd HH:mm:ss");
+
         }
+
+        // Menu 초기 값을 라벨에 매핑하는 메서드
+        private void InitializeMenuLabels()
+        {
+            lb_lineId.Text = MenuInfoDTO.LineId;
+            lb_partId.Text = MenuInfoDTO.PartId ?? "-"; // null일 경우 기본값 설정
+            lb_lot.Text = MenuInfoDTO.LotId ?? "-";
+            lb_startTime.Text = MenuInfoDTO.Start != DateTime.MinValue
+                ? MenuInfoDTO.Start.ToString("yyyy-MM-dd HH:mm:ss")
+                : "-";
+            lb_endTime.Text = MenuInfoDTO.End != DateTime.MinValue
+                ? MenuInfoDTO.End.ToString("yyyy-MM-dd HH:mm:ss")
+                : "-";
+        }
+
         private void OnVisionHistoryUpdated()
         {
             // 데이터가 갱신될 때 호출
@@ -91,9 +123,11 @@ namespace VP_QM_winform
             lb_currentTime.Text = currentTime;
         }
 
-        private bool _isRunning = false; // 작업 상태 관리 변수
+        //private bool _isRunning = false; // 작업 상태 관리 변수
         private async void btn_start_Click(object sender, EventArgs e)
         {
+            _cts = new CancellationTokenSource();
+            var cancellationToken = _cts.Token;
             /*
              * 시작/중지 토글 버튼 클릭시
              * 시작인 경우
@@ -112,9 +146,9 @@ namespace VP_QM_winform
                     btn_start.Text = "중지";
                     btn_start.BackColor = System.Drawing.Color.Red;
                     btn_start.FlatAppearance.BorderColor = System.Drawing.Color.Magenta;
-                    Global.s_MenuDTO.Start = DateTime.Now;
+                    MenuInfoDTO.Start = DateTime.Now;
                     // 백그라운드 작업 시작
-                    await Task.Run(() => process.RunAsync(process.GetCancellationToken()));
+                    await process.RunAsync(cancellationToken);
                 }
                 catch (Exception ex)
                 {
@@ -127,7 +161,8 @@ namespace VP_QM_winform
                 btn_start.BackColor = System.Drawing.Color.ForestGreen;
                 btn_start.FlatAppearance.BorderColor = System.Drawing.Color.Lime;
                 //중지 메소드
-                process.Stop();
+                ProcessService.mytoken = false;
+                Console.WriteLine("중지버튼 클릭 ");
             }
         }
 
@@ -214,16 +249,15 @@ namespace VP_QM_winform
                 string partId = lotId.Substring(0, 5);
 
                 // 3. MenuInfoDTO에 데이터 대입
-                Global.s_MenuDTO = new MenuInfoDTO
-                {
-                    LotId = lotId,
-                    PartId = partId
-                };
+
+                MenuInfoDTO.LotId = lotId;
+                MenuInfoDTO.PartId = partId;
+                
 
                 Global.s_MQTTDTO = new MQTTDTO
                 {
                     LotId = lotId,
-                    LineId = Global.s_MenuDTO.LineId,
+                    LineId = MenuInfoDTO.LineId,
                     Shift = Global.s_LoginDTO.Shift,
                     EmployeeNumber = Global.s_LoginDTO.EmployeeNumber
                 };
