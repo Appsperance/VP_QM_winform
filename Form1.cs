@@ -337,5 +337,10 @@ namespace VP_QM_winform
                 MessageBox.Show("작업이 시작되지 않았습니다.");
             }
         }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }

@@ -181,13 +181,13 @@
             this.tableLayoutPanel3.Controls.Add(this.lb_currentTime, 5, 1);
             this.tableLayoutPanel3.Controls.Add(this.lb_lineId, 0, 1);
             this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel3.Location = new System.Drawing.Point(0, 74);
-            this.tableLayoutPanel3.Margin = new System.Windows.Forms.Padding(0, 3, 0, 0);
+            this.tableLayoutPanel3.Location = new System.Drawing.Point(0, 71);
+            this.tableLayoutPanel3.Margin = new System.Windows.Forms.Padding(0);
             this.tableLayoutPanel3.Name = "tableLayoutPanel3";
             this.tableLayoutPanel3.RowCount = 2;
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel3.Size = new System.Drawing.Size(997, 86);
+            this.tableLayoutPanel3.Size = new System.Drawing.Size(997, 89);
             this.tableLayoutPanel3.TabIndex = 1;
             // 
             // lb_endTime
@@ -196,9 +196,9 @@
             this.lb_endTime.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(69)))), ((int)(((byte)(90)))), ((int)(((byte)(113)))));
             this.lb_endTime.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lb_endTime.ForeColor = System.Drawing.SystemColors.Control;
-            this.lb_endTime.Location = new System.Drawing.Point(649, 43);
+            this.lb_endTime.Location = new System.Drawing.Point(649, 44);
             this.lb_endTime.Name = "lb_endTime";
-            this.lb_endTime.Size = new System.Drawing.Size(193, 43);
+            this.lb_endTime.Size = new System.Drawing.Size(193, 45);
             this.lb_endTime.TabIndex = 12;
             this.lb_endTime.Text = "label8";
             this.lb_endTime.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -209,9 +209,9 @@
             this.lb_startTime.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(69)))), ((int)(((byte)(90)))), ((int)(((byte)(113)))));
             this.lb_startTime.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lb_startTime.ForeColor = System.Drawing.SystemColors.Control;
-            this.lb_startTime.Location = new System.Drawing.Point(450, 43);
+            this.lb_startTime.Location = new System.Drawing.Point(450, 44);
             this.lb_startTime.Name = "lb_startTime";
-            this.lb_startTime.Size = new System.Drawing.Size(193, 43);
+            this.lb_startTime.Size = new System.Drawing.Size(193, 45);
             this.lb_startTime.TabIndex = 11;
             this.lb_startTime.Text = "label7";
             this.lb_startTime.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -222,9 +222,9 @@
             this.lb_lot.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(69)))), ((int)(((byte)(90)))), ((int)(((byte)(113)))));
             this.lb_lot.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lb_lot.ForeColor = System.Drawing.SystemColors.Control;
-            this.lb_lot.Location = new System.Drawing.Point(301, 43);
+            this.lb_lot.Location = new System.Drawing.Point(301, 44);
             this.lb_lot.Name = "lb_lot";
-            this.lb_lot.Size = new System.Drawing.Size(143, 43);
+            this.lb_lot.Size = new System.Drawing.Size(143, 45);
             this.lb_lot.TabIndex = 10;
             this.lb_lot.Text = "label6";
             this.lb_lot.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -235,9 +235,9 @@
             this.lb_partId.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(69)))), ((int)(((byte)(90)))), ((int)(((byte)(113)))));
             this.lb_partId.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lb_partId.ForeColor = System.Drawing.SystemColors.Control;
-            this.lb_partId.Location = new System.Drawing.Point(152, 43);
+            this.lb_partId.Location = new System.Drawing.Point(152, 44);
             this.lb_partId.Name = "lb_partId";
-            this.lb_partId.Size = new System.Drawing.Size(143, 43);
+            this.lb_partId.Size = new System.Drawing.Size(143, 45);
             this.lb_partId.TabIndex = 9;
             this.lb_partId.Text = "label5";
             this.lb_partId.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -251,7 +251,7 @@
             this.lb_workerId.ForeColor = System.Drawing.Color.White;
             this.lb_workerId.Location = new System.Drawing.Point(848, 0);
             this.lb_workerId.Name = "lb_workerId";
-            this.lb_workerId.Size = new System.Drawing.Size(146, 43);
+            this.lb_workerId.Size = new System.Drawing.Size(146, 44);
             this.lb_workerId.TabIndex = 6;
             this.lb_workerId.Text = "현재시간";
             this.lb_workerId.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -265,7 +265,7 @@
             this.lb_end.ForeColor = System.Drawing.Color.White;
             this.lb_end.Location = new System.Drawing.Point(649, 0);
             this.lb_end.Name = "lb_end";
-            this.lb_end.Size = new System.Drawing.Size(193, 43);
+            this.lb_end.Size = new System.Drawing.Size(193, 44);
             this.lb_end.TabIndex = 5;
             this.lb_end.Text = "종료시간";
             this.lb_end.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -279,7 +279,7 @@
             this.lb_start.ForeColor = System.Drawing.Color.White;
             this.lb_start.Location = new System.Drawing.Point(450, 0);
             this.lb_start.Name = "lb_start";
-            this.lb_start.Size = new System.Drawing.Size(193, 43);
+            this.lb_start.Size = new System.Drawing.Size(193, 44);
             this.lb_start.TabIndex = 4;
             this.lb_start.Text = "시작시간";
             this.lb_start.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -293,7 +293,7 @@
             this.lb_lotId.ForeColor = System.Drawing.Color.White;
             this.lb_lotId.Location = new System.Drawing.Point(301, 0);
             this.lb_lotId.Name = "lb_lotId";
-            this.lb_lotId.Size = new System.Drawing.Size(143, 43);
+            this.lb_lotId.Size = new System.Drawing.Size(143, 44);
             this.lb_lotId.TabIndex = 3;
             this.lb_lotId.Text = "로트명";
             this.lb_lotId.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -307,7 +307,7 @@
             this.lb_productId.ForeColor = System.Drawing.Color.White;
             this.lb_productId.Location = new System.Drawing.Point(152, 0);
             this.lb_productId.Name = "lb_productId";
-            this.lb_productId.Size = new System.Drawing.Size(143, 43);
+            this.lb_productId.Size = new System.Drawing.Size(143, 44);
             this.lb_productId.TabIndex = 2;
             this.lb_productId.Text = "제품명";
             this.lb_productId.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -321,7 +321,7 @@
             this.lb_machineId.ForeColor = System.Drawing.Color.White;
             this.lb_machineId.Location = new System.Drawing.Point(3, 0);
             this.lb_machineId.Name = "lb_machineId";
-            this.lb_machineId.Size = new System.Drawing.Size(143, 43);
+            this.lb_machineId.Size = new System.Drawing.Size(143, 44);
             this.lb_machineId.TabIndex = 1;
             this.lb_machineId.Text = "설비명";
             this.lb_machineId.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -333,9 +333,9 @@
             this.lb_currentTime.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lb_currentTime.Font = new System.Drawing.Font("굴림", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
             this.lb_currentTime.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.lb_currentTime.Location = new System.Drawing.Point(848, 43);
+            this.lb_currentTime.Location = new System.Drawing.Point(848, 44);
             this.lb_currentTime.Name = "lb_currentTime";
-            this.lb_currentTime.Size = new System.Drawing.Size(146, 43);
+            this.lb_currentTime.Size = new System.Drawing.Size(146, 45);
             this.lb_currentTime.TabIndex = 7;
             this.lb_currentTime.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
@@ -345,9 +345,9 @@
             this.lb_lineId.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(69)))), ((int)(((byte)(90)))), ((int)(((byte)(113)))));
             this.lb_lineId.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lb_lineId.ForeColor = System.Drawing.SystemColors.Control;
-            this.lb_lineId.Location = new System.Drawing.Point(3, 43);
+            this.lb_lineId.Location = new System.Drawing.Point(3, 44);
             this.lb_lineId.Name = "lb_lineId";
-            this.lb_lineId.Size = new System.Drawing.Size(143, 43);
+            this.lb_lineId.Size = new System.Drawing.Size(143, 45);
             this.lb_lineId.TabIndex = 8;
             this.lb_lineId.Text = "label4";
             this.lb_lineId.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -621,6 +621,7 @@
             this.Controls.Add(this.tableLayoutPanel1);
             this.Name = "Form1";
             this.Text = "품질관리";
+            this.Load += new System.EventHandler(this.Form1_Load);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel2.ResumeLayout(false);
             this.tableLayoutPanel2.PerformLayout();
