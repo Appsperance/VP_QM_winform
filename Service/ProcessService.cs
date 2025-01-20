@@ -118,12 +118,16 @@ namespace VP_QM_winform.Service
                             //비전처리
                             VisionResultDTO visionResultDTO = new VisionResultDTO();
                             var imgAndLabel = await Task.Run(() => _visionController.ProcessImage(img, visionResultDTO),token); // 비동기로 처리
-                            //비전 처리된 이미지 MQTTDTO에 할당
-                            Global.s_MQTTDTO.NGImg = imgAndLabel.Img;
-                        
+                            
                             var inspectionResult = ProcessState.GetState("InspectionResult");
                             Console.WriteLine($"판독 결과: {inspectionResult}");
                             await Task.Delay(2000, token); // 이미지 처리 대기
+                            //비전 처리된 이미지 MQTTDTO에 할당
+                            if (!(bool)inspectionResult)
+                            {
+                                Global.s_MQTTDTO.NGImg = imgAndLabel.Img;
+                            }
+                        
 
                             //MQTT에 CurrentStage와 MQTTDTO 전송
                             Global.s_MQTTDTO.StageVal = "010";
