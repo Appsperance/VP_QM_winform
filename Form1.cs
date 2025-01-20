@@ -8,6 +8,7 @@ using VP_QM_winform.VO;
 using VP_QM_winform.DTO;
 using System.Linq;
 using System.Threading;
+using System.Drawing;
 
 namespace VP_QM_winform
 {
@@ -24,7 +25,7 @@ namespace VP_QM_winform
         public Form1()
         {
             InitializeComponent();
-            
+            this.Resize += new EventHandler(Form1_Resize);
             settingJobService = new SettingJobService();
             
             
@@ -341,6 +342,56 @@ namespace VP_QM_winform
         private void Form1_Load(object sender, EventArgs e)
         {
 
+        }
+        private void Form1_Resize(object sender, EventArgs e)
+        {
+            float scaleFactor = Math.Min(this.Width / 800f, this.Height / 600f); // 기준 크기 800x600
+            AdjustFontSize(this, scaleFactor);
+        }
+
+        // 모든 컨트롤의 폰트 크기 조정
+        private void AdjustFontSize(Control parent, float scaleFactor)
+        {
+            foreach (Control control in parent.Controls)
+            {
+                if (control is Label || control is Button || control is TextBox || control is DataGridView || control is ComboBox)
+                {
+                    float newSize = Math.Max(10, 12 * scaleFactor); // 최소 10px 유지
+                    control.Font = new Font(control.Font.FontFamily, newSize, control.Font.Style);
+                }
+
+                // 콤보박스인 경우 드롭다운 리스트의 글자 크기도 변경
+                if (control is ComboBox comboBox)
+                {
+                    comboBox.DrawMode = DrawMode.OwnerDrawFixed; // 사용자 정의 드로잉 모드 설정
+                    comboBox.ItemHeight = (int)(16 * scaleFactor); // 드롭다운 항목 높이 조정
+                    comboBox.DrawItem += ComboBox_DrawItem; // 드롭다운 글자 크기 변경 이벤트 등록
+                }
+
+                // 재귀적으로 자식 컨트롤도 조정
+                if (control.Controls.Count > 0)
+                {
+                    AdjustFontSize(control, scaleFactor);
+                }
+            }
+        }
+        private void ComboBox_DrawItem(object sender, DrawItemEventArgs e)
+        {
+            if (e.Index < 0) return;
+
+            ComboBox comboBox = sender as ComboBox;
+            float scaleFactor = Math.Min(this.Width / 800f, this.Height / 600f); // 기준 크기 800x600
+            float fontSize = Math.Max(10, 12 * scaleFactor); // 최소 글자 크기 10px 유지
+
+            e.DrawBackground();
+
+            using (Font font = new Font(comboBox.Font.FontFamily, fontSize, FontStyle.Regular))
+            using (Brush brush = new SolidBrush(e.ForeColor))
+            {
+                e.Graphics.DrawString(comboBox.Items[e.Index].ToString(), font, brush, e.Bounds);
+            }
+
+            e.DrawFocusRectangle();
         }
     }
 }

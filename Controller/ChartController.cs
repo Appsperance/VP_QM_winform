@@ -20,6 +20,7 @@ namespace VP_QM_winform.Controller
         {
             chartPanel = panel ?? throw new ArgumentNullException(nameof(panel));
             chartPanel.Paint += new PaintEventHandler(DrawDonutChart);
+            chartPanel.Resize += (s, e) => chartPanel.Invalidate(); // 크기 변경 시 다시 그리기
         }
 
         // 데이터를 업데이트하고 차트를 다시 그리기
@@ -100,4 +101,4 @@ namespace VP_QM_winform.Controller
             }
         }
     }
-    }
+}
