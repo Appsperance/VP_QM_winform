@@ -81,7 +81,7 @@ namespace VP_QM_winform.Service
                             Console.WriteLine($"현재 stage: {ProcessState.GetState("CurrentStage")}");
 
                             _arduinoController.serialReceiveData = "";
-                            _arduinoController.SendConveyorSpeed(200);
+                            _arduinoController.SendConveyorSpeed(255);
                             Console.WriteLine("물건 투입");
                             //MQTT 전송
                             Global.s_MQTTDTO.StageVal = "100";
@@ -101,7 +101,6 @@ namespace VP_QM_winform.Service
                             Console.WriteLine($"현재 stage: {ProcessState.GetState("CurrentStage")}");
 
                             _arduinoController.serialReceiveData = "";
-                            await Task.Delay(1000, token); // 작업 취소 가능 대기
                             _arduinoController.SendConveyorSpeed(0);
                             await Task.Delay(2000, token);
 
@@ -165,7 +164,7 @@ namespace VP_QM_winform.Service
                             // img 초기화
                             Global.s_MQTTDTO.NGImg = null;
                             img.Dispose();
-                            _arduinoController.SendConveyorSpeed(200);
+                            _arduinoController.SendConveyorSpeed(255);
                         }
 
                         // 센서3 이벤트 처리
@@ -177,6 +176,37 @@ namespace VP_QM_winform.Service
                             Console.WriteLine($"현재 stage: {ProcessState.GetState("CurrentStage")}");
 
                             _arduinoController.serialReceiveData = "";
+
+                            if (!inspectionResult) // 검사 결과가 Bad인 경우
+                            {
+                                _arduinoController.SendConveyorSpeed(0);
+                                await Task.Delay(2000, token);
+
+                                // FlashLamp 실행 (노란색 램프 켜기)
+                                _arduinoController.FlashLamp("YELLOW", true);
+
+                                // 불량품 처리 로직
+                                await Task.Run(() => _arduinoController.GrabObj());
+                                await Task.Delay(2000, token);
+
+                                await Task.Run(() => _arduinoController.PullObj());
+                                await Task.Delay(2000, token);
+
+                                await Task.Run(() => _arduinoController.MovToBad());
+                                await Task.Delay(2000, token);
+
+                                await Task.Run(() => _arduinoController.DownObj());
+                                await Task.Delay(2000, token);
+
+                                // 초기화 작업
+                                _arduinoController.ResetPosition();
+                                await _arduinoController.FlashLamp("YELLOW", false);
+
+                                // 상태 전환: Idle
+                                ProcessState.UpdateState("CurrentStage", "waiting");
+                                _arduinoController.LampOn("RED", onOff: true);
+                                Console.WriteLine("불량품 처리 완료, 대기 상태로 전환");
+                            }
 
                             // MQTT에 CurrentStage 전송
                             Global.s_MQTTDTO.StageVal = "001";
@@ -213,41 +243,6 @@ namespace VP_QM_winform.Service
                             catch (Exception ex) 
                             {
                                 Console.WriteLine($"소켓서버 데이터 전송 실패: {ex}");
-                            }
-
-                            /*
-                             *
-                             */
-
-                            if (!inspectionResult) // 검사 결과가 Bad인 경우
-                            {
-                                _arduinoController.SendConveyorSpeed(0);
-                                await Task.Delay(2000, token);
-
-                                // FlashLamp 실행 (노란색 램프 켜기)
-                               _arduinoController.FlashLamp("YELLOW", true);
-
-                                // 불량품 처리 로직
-                                await Task.Run(() => _arduinoController.GrabObj());
-                                await Task.Delay(2000,token);
-
-                                await Task.Run(() => _arduinoController.PullObj());
-                                await Task.Delay(2000, token);
-
-                                await Task.Run(() => _arduinoController.MovToBad());
-                                await Task.Delay(2000, token);
-
-                                await Task.Run(() => _arduinoController.DownObj());
-                                await Task.Delay(2000, token);
-
-                                // 초기화 작업
-                                _arduinoController.ResetPosition();
-                                await _arduinoController.FlashLamp("YELLOW", false);
-
-                                // 상태 전환: Idle
-                                ProcessState.UpdateState("CurrentStage", "waiting");
-                                _arduinoController.LampOn("RED", onOff: true);
-                                Console.WriteLine("불량품 처리 완료, 대기 상태로 전환");
                             }
                         }
                     }

@@ -228,7 +228,7 @@ namespace VP_QM_winform.Controller
         {
             Console.WriteLine("물건 잡음");
             SendServo1Angle(130);
-            SendServo2Angle(180);
+            SendServo2Angle(177);
             SendServo3Angle(95);
             Thread.Sleep(1000);
             SendCatchOnOff(true);
@@ -238,7 +238,7 @@ namespace VP_QM_winform.Controller
         {
             Console.WriteLine("물건 올림");
             SendServo1Angle(80);
-            SendServo2Angle(180);
+            SendServo2Angle(177);
             SendServo3Angle(95);
         }
 
